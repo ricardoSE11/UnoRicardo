@@ -20,16 +20,19 @@ public class Game extends UnicastRemoteObject implements IGame , IObservable , S
     private ArrayList<IObservador> observadores; //jugadores
     private ArrayList<Jugador> players;
     private boolean gameOn;
-    //private CardGenerator cardGenerator;
+    private GeneradorDeCartas generadorDeCartas;
     private ArrayList<Carta> drawPile;
     private ArrayList<Carta> discardPile;
     private int turn; //will be assigned with matching IDs
 
     public Game() throws RemoteException
-    {
-        this.players = new ArrayList<>();
+    { 
         this.observadores = new ArrayList<>();
+        this.players = new ArrayList<>();
         this.gameOn = true;
+        this.generadorDeCartas = new GeneradorDeCartas();
+        this.drawPile = new ArrayList<>();
+        this.discardPile = new ArrayList<>();
         this.turn = 0;
     }
 
@@ -57,6 +60,7 @@ public class Game extends UnicastRemoteObject implements IGame , IObservable , S
         return turn;
     }
 
+    //Utilizar este método, dentro de otro método que lo necesite. (Con el código adecuado)
     @Override
     public void notificar() {
          //for each
@@ -64,15 +68,6 @@ public class Game extends UnicastRemoteObject implements IGame , IObservable , S
          {
              o.update();
          }
-    }
-
-    @Override
-    public int sumarCincoATurno() throws Exception 
-    {
-        System.out.println("El cliente está sumando 5 a turno");
-        turn += 5;
-        notificar();
-        return turn;
     }
 
     @Override

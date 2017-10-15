@@ -28,6 +28,6 @@ public class Jugador implements IObservador, Serializable
     @Override
     public void update() {
         //acción a realizar después de que se juegue una carta o algo así
-        System.out.println("EL JUEGO HA CAMBIADO");
+        System.out.println("EL JUEGO ESTÁ HACIENDO CAMBIOS");
     }
 }

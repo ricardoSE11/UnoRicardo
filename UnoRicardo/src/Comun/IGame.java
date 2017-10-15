@@ -20,8 +20,6 @@ public interface IGame extends Remote
     
     public void añadirObservador(IObservador o)throws Exception;
     
-    public int sumarCincoATurno()throws Exception;
-    
     public int getTurn()throws Exception;
     
     public ArrayList<IObservador> getObservadores ()throws Exception;
