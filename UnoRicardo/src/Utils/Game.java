@@ -13,23 +13,31 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
 
-public class Game extends UnicastRemoteObject implements IGame
+public class Game extends UnicastRemoteObject implements IGame , IObservable
 {
     //------------- Atributes -------------
-    //public ArrayList<Jugador> players;
-    public boolean gameOn;
-    //public CardGenerator cardGenerator;
-    //public ArrayList<Card> drawPile;
-    //public ArrayList<Card> discardPile;
-    public int turn; //will be assigned with matching IDs
+    private ArrayList<IObservador> observadores; //jugadores
+    //private ArrayList<Jugador> players;
+    private boolean gameOn;
+    //private CardGenerator cardGenerator;
+    //private ArrayList<Card> drawPile;
+    //private ArrayList<Card> discardPile;
+    private int turn; //will be assigned with matching IDs
 
-   public Game() throws Exception
+    public Game() throws RemoteException
+    {
+        this.observadores = new ArrayList<>();
+        this.gameOn = true;
+        this.turn = 0;
+    }
+
+ 
+    
+   public void añadirObservador(IObservador o)
    {
-       this.gameOn = true;
-       this.turn = 0;
+       observadores.add(o);
    }
-    
-    
+   
    @Override
    public String enviarPipo(Pipo pipo) throws Exception 
    {
@@ -37,6 +45,24 @@ public class Game extends UnicastRemoteObject implements IGame
        System.out.println(pipo.piposo.atributillo);
        return pipo.nombre;
    }
+
+    @Override
+    public int sumarATurno() throws Exception 
+    {
+        System.out.println("El cliente le está sumando a turno ");
+        turn ++;
+        notificar();
+        return turn;
+    }
+
+    @Override
+    public void notificar() {
+         //for each
+         for(IObservador o:observadores)
+         {
+             o.update();
+         }
+    }
 
     
 }

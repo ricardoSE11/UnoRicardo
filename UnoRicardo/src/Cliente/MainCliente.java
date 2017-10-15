@@ -6,6 +6,7 @@
 package Cliente;
 
 import Comun.IGame;
+import Utils.Jugador;
 import Utils.Pipo;
 import Utils.Piposo;
 import java.rmi.registry.LocateRegistry;
@@ -19,12 +20,15 @@ public class MainCliente {
     
     public static void main(String[] args) 
     {
+        Jugador jugador = new Jugador();
         try 
         {
             Registry miRegistro = LocateRegistry.getRegistry("200.200.10.36" , 9500);
             IGame juego = (IGame)miRegistro.lookup("Juegito");
-            
+            juego.añadirObservador(jugador);
             System.out.println("Si sirve, esto debería dar 1 + 1 = "  +juego.enviarPipo(new Pipo("Nombre del Pipo", 2 , new Piposo("El atributillo de Piposo"))));
+            System.out.println("Si esto funciona, tengo una noción de cómo usar el patrón: " + juego.sumarATurno());
+            System.out.println("Si esto funciona, tengo una noción de cómo usar el patrón: " + juego.sumarATurno());
         } 
         
         catch (Exception e) 

@@ -5,6 +5,7 @@
  */
 package Comun;
 
+import Utils.IObservador;
 import Utils.Pipo;
 import java.rmi.Remote;
 
@@ -13,7 +14,8 @@ public interface IGame extends Remote
 {
     public String enviarPipo(Pipo pipo)throws Exception;
     
+    public int sumarATurno()throws Exception;
     
-    
-    
+    public void añadirObservador(IObservador o)throws Exception;
+
 }
