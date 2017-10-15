@@ -5,5 +5,5 @@ package Utils;
 
 public enum Color 
 {
-    RED,BLUE,GREEN,YELLOW,BLACK
+    ROJO,VERDE,AMARILLO,AZUL,NEGRO
 }

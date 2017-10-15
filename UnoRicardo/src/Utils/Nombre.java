@@ -1,0 +1,9 @@
+
+package Utils;
+
+
+public enum Nombre 
+{
+    CERO,UNO,DOS,TRES,CUATRO,CINCO,SEIS,SIETE,OCHO,NUEVE,
+    SALTA,REVERSA,TOMADOS,COMODIN,COMODIN4
+}

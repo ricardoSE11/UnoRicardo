@@ -6,8 +6,10 @@
 package Comun;
 
 import Utils.IObservador;
+import Utils.Jugador;
 import Utils.Pipo;
 import java.rmi.Remote;
+import java.util.ArrayList;
 
 
 public interface IGame extends Remote
@@ -17,5 +19,13 @@ public interface IGame extends Remote
     public int sumarATurno()throws Exception;
     
     public void añadirObservador(IObservador o)throws Exception;
+    
+    public int sumarCincoATurno()throws Exception;
+    
+    public int getTurn()throws Exception;
+    
+    public ArrayList<IObservador> getObservadores ()throws Exception;
+    
+    public ArrayList<Jugador> getJugadores() throws Exception;
 
 }

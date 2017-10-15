@@ -5,6 +5,7 @@
  */
 package Servidor;
 
+import Comun.IGame;
 import Utils.Game;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -16,7 +17,7 @@ public class MainServidor implements java.io.Serializable
     {
         try
         {
-            Game juego = new Game();
+            IGame juego = new Game();
             
             Registry myRegistry = LocateRegistry.createRegistry(9500);
             myRegistry.rebind("Juegito", juego);
