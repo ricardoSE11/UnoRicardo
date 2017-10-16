@@ -258,6 +258,11 @@ public class Game extends UnicastRemoteObject implements IGame , IObservable , S
         this.turn = turno;
     }
 
+    @Override
+    public int getNexTurn() throws Exception {
+        return 2;
+    }
+
     
     
 

@@ -57,6 +57,6 @@ public interface IGame extends Remote
     
     public void setTurn(int turno)throws Exception;
     
-    
+    public int getNexTurn()throws Exception;
 
 }
