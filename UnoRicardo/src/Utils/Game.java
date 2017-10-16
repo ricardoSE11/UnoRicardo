@@ -33,7 +33,7 @@ public class Game extends UnicastRemoteObject implements IGame , IObservable , S
         this.generadorDeCartas = new GeneradorDeCartas();
         this.drawPile = new ArrayList<>();
         this.discardPile = new ArrayList<>();
-        this.turn = 0;
+        this.turn = 0; //Debe empezar en 1 porque el primer ID va a ser 1
     }
 
 
@@ -88,22 +88,25 @@ public class Game extends UnicastRemoteObject implements IGame , IObservable , S
 
     @Override
     public void añadirJugador(Jugador j) throws Exception {
-        System.out.println("Estamos añadiendo al jugador:" + j.getName());
+        int nuevoID = players.size() + 1;
+        j.setId(nuevoID);
+        System.out.println("Estamos añadiendo al jugador:" + j.getName() + "con el ID: " + nuevoID);
         this.players.add(j);
     }
 
     @Override
-    public void shuffleCards(ArrayList<Carta> deck) throws Exception {
-        int largo = deck.size();
+    public void shuffleCards() throws Exception {
+        int largo = this.drawPile.size();
         for (int i = 0 ; i < largo ; i++)
         {
             int nuevaPosicion = i + (int)(Math.random() * (largo - i));
             //Intercambiamos la posición de dos cartas
-            Carta cartaActual = deck.get(i);
-            Carta cartaTemporal = deck.get(nuevaPosicion);
-            deck.set(nuevaPosicion, cartaActual);
-            deck.set(i, cartaTemporal);
+            Carta cartaActual = this.drawPile.get(i);
+            Carta cartaTemporal = this.drawPile.get(nuevaPosicion);
+            this.drawPile.set(nuevaPosicion, cartaActual);
+            this.drawPile.set(i, cartaTemporal);
         }
+       
     }
     
     @Override
@@ -133,6 +136,21 @@ public class Game extends UnicastRemoteObject implements IGame , IObservable , S
         {
             dealCardsToPlayer(players.get(i));
         }
+    }
+
+    @Override
+    public ArrayList<Carta> getDrawPile() throws Exception {
+        return this.drawPile;
+    }
+
+    @Override
+    public ArrayList<Carta> getDiscardPile() throws Exception {
+        return this.discardPile;
+    }
+
+    @Override
+    public boolean isGameOn() throws Exception {
+        return this.gameOn;
     }
 
     

@@ -29,12 +29,18 @@ public interface IGame extends Remote
     
     public void añadirJugador(Jugador j) throws Exception;
     
-    public void shuffleCards(ArrayList<Carta> deck)throws Exception;
+    public void shuffleCards()throws Exception;
     
     public void inicializarDrawPile()throws Exception;
     
     public void dealCardsToPlayer(Jugador j)throws Exception;
     
     public void dealCardsToAllPlayers()throws Exception;
+    
+    public ArrayList<Carta> getDrawPile()throws Exception;
+    
+    public ArrayList<Carta> getDiscardPile()throws Exception;
+    
+    public boolean isGameOn()throws Exception;
 
 }

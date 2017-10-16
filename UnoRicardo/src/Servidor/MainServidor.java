@@ -18,7 +18,6 @@ public class MainServidor implements java.io.Serializable
         try
         {
             IGame juego = new Game();
-            
             Registry myRegistry = LocateRegistry.createRegistry(9500);
             myRegistry.rebind("Juegito", juego);
             

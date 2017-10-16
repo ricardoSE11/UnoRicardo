@@ -10,6 +10,7 @@ import Utils.Jugador;
 import Utils.Pipo;
 import Utils.Piposo;
 import Views.MainWindow;
+import Views.PlayWindow;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 

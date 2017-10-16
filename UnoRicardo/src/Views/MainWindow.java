@@ -3,6 +3,7 @@ package Views;
 
 
 import Comun.IGame;
+import Utils.Carta;
 import Utils.Jugador;
 import java.io.Serializable;
 import java.util.logging.Level;
@@ -175,20 +176,6 @@ public class MainWindow extends javax.swing.JFrame {
         try 
         {
             numDePrueba = game.getJugadores().size();
-            if (numDePrueba >= 2)
-            {
-                game.inicializarDrawPile();
-                game.dealCardsToAllPlayers();
-                
-                Jugador primerJugador = game.getJugadores().get(0);
-                String color = primerJugador.getHand().get(0).getColor().toString();
-                lblPruebaCarta.setText(color);
-            }
-            
-            else
-            {
-                System.out.println("No hay suficientes jugadores");
-            }
         }
         
         catch (Exception ex) 
@@ -205,17 +192,36 @@ public class MainWindow extends javax.swing.JFrame {
         
         Jugador nuevoJugador = new Jugador(nombre , ip);
         lblPrueba.setText(nuevoJugador.getName());
-        
+
         try 
         {
+            int cantPlayers = game.getJugadores().size();
             game.añadirJugador(nuevoJugador);//potencial breakpoint
+            
+            if (cantPlayers >= 1)
+            {
+                game.inicializarDrawPile();
+                game.shuffleCards();
+                
+                game.dealCardsToAllPlayers();
+                
+                int posicionActual = game.getJugadores().size() - 1; 
+
+                PlayWindow pw = new PlayWindow(game , game.getJugadores().get(posicionActual));
+                pw.setVisible(true);
+            }
+            
+            else
+            {
+                System.out.println("No hay suficientes jugadores");
+            }
         } 
         
         catch (Exception ex) 
         {
             Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         txfUserIP.setText("");
         txfUserName.setText("");
 
