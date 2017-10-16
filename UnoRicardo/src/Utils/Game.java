@@ -223,6 +223,14 @@ public class Game extends UnicastRemoteObject implements IGame , IObservable , S
         }
     }
 
+    @Override
+    public void startGame() throws Exception {
+        initializeDrawPile();
+        shuffleCards();
+        dealCardsToAllPlayers();
+        initializeDiscardPile();
+    }
+
 
     
 

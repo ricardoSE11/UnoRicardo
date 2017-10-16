@@ -11,6 +11,7 @@ import Utils.Pipo;
 import Utils.Piposo;
 import Views.MainWindow;
 import Views.PlayWindow;
+import java.net.InetAddress;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
@@ -24,7 +25,9 @@ public class MainCliente {
     {
         try 
         {
-            Registry miRegistro = LocateRegistry.getRegistry("200.200.10.36" , 9500);
+            //ip "200.200.10.36"
+            String ip = InetAddress.getLocalHost().getHostAddress();
+            Registry miRegistro = LocateRegistry.getRegistry(ip , 9500);
             IGame juego = (IGame)miRegistro.lookup("Juegito");
             
             //Sección de pruebas

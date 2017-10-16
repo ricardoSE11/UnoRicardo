@@ -50,5 +50,8 @@ public interface IGame extends Remote
     public boolean isPlayValid(Carta cardToPlay)throws Exception;
     
     public boolean placeCardOnDiscardPile(Carta playedCard)throws Exception;
+    
+    public void startGame()throws Exception;
+    
 
 }

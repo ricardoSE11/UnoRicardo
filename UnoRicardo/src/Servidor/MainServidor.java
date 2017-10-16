@@ -22,6 +22,12 @@ public class MainServidor implements java.io.Serializable
             Registry myRegistry = LocateRegistry.createRegistry(9500);
             myRegistry.rebind("Juegito", juego);
             
+            //Aquí debería haber un menú con opciones
+            /*
+                1. players: IP, Usuario
+                2. start game
+                3. end game
+            */
             //gui();
             
             System.out.println("Servidor ON");
