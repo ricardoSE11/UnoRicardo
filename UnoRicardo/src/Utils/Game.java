@@ -29,7 +29,7 @@ public class Game extends UnicastRemoteObject implements IGame , IObservable , S
     { 
         this.observadores = new ArrayList<>();
         this.players = new ArrayList<>();
-        this.gameOn = true;
+        this.gameOn = false;
         this.generadorDeCartas = new GeneradorDeCartas();
         this.drawPile = new ArrayList<>();
         this.discardPile = new ArrayList<>();
@@ -111,7 +111,7 @@ public class Game extends UnicastRemoteObject implements IGame , IObservable , S
     }
     
     @Override
-    public void inicializarDrawPile() throws Exception {
+    public void initializeDrawPile() throws Exception {
         System.out.println("Estamos inicializando el DrawPile con: " + players.size() + "jugadores");
          this.drawPile = generadorDeCartas.generateBiggerDeck(players.size());
     }
@@ -172,9 +172,18 @@ public class Game extends UnicastRemoteObject implements IGame , IObservable , S
     //El DrawPile debe ser inicializado antes de usar este método
     @Override
     public void initializeDiscardPile() throws Exception {
-        Carta firstCard = drawPile.get(0);
-        discardPile.add(firstCard);
-        drawPile.remove(firstCard);
+        int largo = drawPile.size();
+        for (int i = 0; i < largo ; i++)
+        {
+            Carta firstCard = drawPile.get(i);
+            if (!firstCard.getTipo().equals(Tipo.TRAMPA))
+            {
+                discardPile.add(firstCard);
+                drawPile.remove(firstCard);
+                break;
+            }
+        }
+
     }
 
     @Override
@@ -200,7 +209,18 @@ public class Game extends UnicastRemoteObject implements IGame , IObservable , S
     // ----------------------------Pendiente-----------------------------------
     @Override
     public boolean placeCardOnDiscardPile(Carta playedCard) throws Exception {
-        return true;
+        if (isPlayValid(playedCard))
+        {
+            System.out.println("Se jugó la carta: " + playedCard.getNombre().toString()  + " " + playedCard.getColor().toString());
+            discardPile.add(playedCard);
+            return true;
+        }
+        
+        else
+        {
+            System.out.println("No se puede jugar la carta: " + playedCard.getNombre().toString()  + " " + playedCard.getColor().toString());
+            return false;
+        }
     }
 
 

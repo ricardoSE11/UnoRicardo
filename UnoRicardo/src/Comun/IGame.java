@@ -31,7 +31,7 @@ public interface IGame extends Remote
     
     public void shuffleCards()throws Exception;
     
-    public void inicializarDrawPile()throws Exception;
+    public void initializeDrawPile()throws Exception;
     
     public void dealCardsToPlayer(Jugador j)throws Exception;
     

@@ -196,9 +196,9 @@ public class MainWindow extends javax.swing.JFrame {
             int cantPlayers = game.getJugadores().size();
             game.añadirJugador(nuevoJugador);//potencial breakpoint
             
-            if (cantPlayers >= 2)
+            if (cantPlayers >= 1)
             {
-                game.inicializarDrawPile();
+                game.initializeDrawPile();
                 game.shuffleCards();
                 game.dealCardsToAllPlayers();
                 game.initializeDiscardPile();

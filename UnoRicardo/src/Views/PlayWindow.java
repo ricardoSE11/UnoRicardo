@@ -68,7 +68,29 @@ public class PlayWindow extends javax.swing.JFrame {
                 if (yesOrNo == 0)
                 {
                     //Aquí debe ir el método de jugar del jugador respectivo.
-                    System.out.println("Se jugó la carta de índice: " + cartaEscogida);
+                    System.out.println("El jugador: " + jugador.getName() +  " jugó la carta de índice: " + cartaEscogida);
+                    Carta playedCard = jugador.playCarta(cartaEscogida);
+                    boolean wasPlayed;
+                    
+                    try 
+                    {
+                        wasPlayed = game.placeCardOnDiscardPile(playedCard);
+                        if (wasPlayed)
+                        {
+                            jugador.getHand().remove(cartaEscogida);
+                        }
+                        
+                        else
+                        {
+                            JOptionPane.showMessageDialog(null, "Jugada inválida.");
+                        }
+                    } 
+                    
+                    catch (Exception ex) 
+                    {
+                        Logger.getLogger(PlayWindow.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
                     
                 }
       
@@ -118,6 +140,7 @@ public class PlayWindow extends javax.swing.JFrame {
         cardsDisplayPanel = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         btnStartGame = new javax.swing.JButton();
+        btnSetDiscardPile = new javax.swing.JButton();
         drawAndDiscardPanel = new javax.swing.JPanel();
         btnDrawPile = new javax.swing.JButton();
         lblDiscardPile = new javax.swing.JLabel();
@@ -151,21 +174,32 @@ public class PlayWindow extends javax.swing.JFrame {
             }
         });
 
+        btnSetDiscardPile.setIcon(new javax.swing.ImageIcon("f:\\Users\\rshum\\Desktop\\ImagenesUNO\\play.png")); // NOI18N
+        btnSetDiscardPile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSetDiscardPileActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(67, 67, 67)
-                .addComponent(btnStartGame, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(btnSetDiscardPile, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE)
+                    .addComponent(btnStartGame, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(108, 108, 108))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(41, 41, 41)
-                .addComponent(btnStartGame, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(32, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(btnStartGame, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnSetDiscardPile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         btnDrawPile.setIcon(new javax.swing.ImageIcon("f:\\Users\\rshum\\Downloads\\Images\\dorso.png")); // NOI18N
@@ -334,20 +368,6 @@ public class PlayWindow extends javax.swing.JFrame {
     //Aquí se desactiva el botón de UNO. PROGRAMAR, POSTERIORMENTE, ADECUADAMENTE.
     private void btnStartGameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartGameActionPerformed
 
-        int lastCardIndex = 0;
-        try 
-        {
-            lastCardIndex = game.getDiscardPile().size() - 1;
-            Carta lastCard = game.getDiscardPile().get(lastCardIndex);
-            String imgString = getCardString(lastCard);
-            lblDiscardPile.setIcon(new javax.swing.ImageIcon(getClass().getResource("../Resources/" + imgString + ".png")));
-        } 
-        
-        catch (Exception ex) 
-        {
-            Logger.getLogger(PlayWindow.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
         placePlayerCards(jugador);
         btnCallUNO.setEnabled(false);
     }//GEN-LAST:event_btnStartGameActionPerformed
@@ -380,6 +400,17 @@ public class PlayWindow extends javax.swing.JFrame {
 
     private void brnUsarComandoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_brnUsarComandoActionPerformed
 
+        int numDePrueba;
+        try 
+        {
+            numDePrueba = game.getJugadores().size();
+            String stringDePrueba = Integer.toString(numDePrueba);
+            serverList.add(stringDePrueba);
+        } 
+        catch (Exception ex) 
+        {
+            Logger.getLogger(PlayWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_brnUsarComandoActionPerformed
 
     private void btnClearServerListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearServerListActionPerformed
@@ -391,6 +422,24 @@ public class PlayWindow extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnCallUNOActionPerformed
 
+    private void btnSetDiscardPileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSetDiscardPileActionPerformed
+      
+        //Hace visible la última carta que esta en la DiscardPile
+        int lastCardIndex = 0;
+        try 
+        {
+            lastCardIndex = game.getDiscardPile().size() - 1;
+            Carta lastCard = game.getDiscardPile().get(lastCardIndex);
+            String imgString = getCardString(lastCard);
+            lblDiscardPile.setIcon(new javax.swing.ImageIcon(getClass().getResource("../Resources/" + imgString + ".png")));
+        } 
+        
+        catch (Exception ex) 
+        {
+            Logger.getLogger(PlayWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnSetDiscardPileActionPerformed
+
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -398,6 +447,7 @@ public class PlayWindow extends javax.swing.JFrame {
     private javax.swing.JButton btnCallUNO;
     private javax.swing.JButton btnClearServerList;
     private javax.swing.JButton btnDrawPile;
+    private javax.swing.JButton btnSetDiscardPile;
     private javax.swing.JButton btnStartGame;
     private javax.swing.JPanel callUNOPanel;
     private javax.swing.JScrollPane cardsDisplay;
