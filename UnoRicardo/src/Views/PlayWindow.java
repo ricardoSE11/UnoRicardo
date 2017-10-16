@@ -69,6 +69,7 @@ public class PlayWindow extends javax.swing.JFrame {
                 {
                     //Aquí debe ir el método de jugar del jugador respectivo.
                     System.out.println("Se jugó la carta de índice: " + cartaEscogida);
+                    
                 }
       
             }
@@ -110,9 +111,7 @@ public class PlayWindow extends javax.swing.JFrame {
         cardsDisplay = new javax.swing.JScrollPane();
         cardsDisplayPanel = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        btnPrueba = new javax.swing.JButton();
-        btnActivar = new javax.swing.JButton();
-        lista = new java.awt.List();
+        btnStartGame = new javax.swing.JButton();
         drawAndDiscardPanel = new javax.swing.JPanel();
         btnDrawPile = new javax.swing.JButton();
         lblDiscardPile = new javax.swing.JLabel();
@@ -139,17 +138,10 @@ public class PlayWindow extends javax.swing.JFrame {
         cardsDisplayPanel.setLayout(new java.awt.GridLayout(0, 7));
         cardsDisplay.setViewportView(cardsDisplayPanel);
 
-        btnPrueba.setText("prueba");
-        btnPrueba.addActionListener(new java.awt.event.ActionListener() {
+        btnStartGame.setIcon(new javax.swing.ImageIcon("f:\\Users\\rshum\\Desktop\\ImagenesUNO\\rugby-fan-with-an-encouraging-signal-with-word-go.png")); // NOI18N
+        btnStartGame.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPruebaActionPerformed(evt);
-            }
-        });
-
-        btnActivar.setText("Activar");
-        btnActivar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnActivarActionPerformed(evt);
+                btnStartGameActionPerformed(evt);
             }
         });
 
@@ -158,25 +150,16 @@ public class PlayWindow extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(38, 38, 38)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(lista, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(btnPrueba)
-                        .addGap(77, 77, 77)
-                        .addComponent(btnActivar)))
+                .addGap(67, 67, 67)
+                .addComponent(btnStartGame, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnPrueba)
-                    .addComponent(btnActivar))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lista, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(84, 84, 84))
+                .addGap(41, 41, 41)
+                .addComponent(btnStartGame, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(32, Short.MAX_VALUE))
         );
 
         btnDrawPile.setIcon(new javax.swing.ImageIcon("f:\\Users\\rshum\\Downloads\\Images\\dorso.png")); // NOI18N
@@ -319,7 +302,7 @@ public class PlayWindow extends javax.swing.JFrame {
                     .addGroup(panelFondoLayout.createSequentialGroup()
                         .addComponent(serverPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(callUNOPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGap(22, 22, 22))
@@ -343,27 +326,12 @@ public class PlayWindow extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     
-    // BOTONES
-    
-    private void btnPruebaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPruebaActionPerformed
-        // TODO add your handling code here:
-        int contador = 0;
-        for (JButton butongo : botonesDeCartas)
-        {
-            //int i = butongo.getX();
-            String prueba = "Número: " + contador + "CARTA ESCOGIDA: " + cartaEscogida;
-            lista.add(prueba);
-            contador++;
-        }
-        
-    }//GEN-LAST:event_btnPruebaActionPerformed
-
     //Aquí se desactiva el botón de UNO. PROGRAMAR, POSTERIORMENTE, ADECUADAMENTE.
-    private void btnActivarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActivarActionPerformed
+    private void btnStartGameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartGameActionPerformed
 
         placePlayerCards(jugador);
         btnCallUNO.setEnabled(false);
-    }//GEN-LAST:event_btnActivarActionPerformed
+    }//GEN-LAST:event_btnStartGameActionPerformed
 
     private void cardsDisplayPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cardsDisplayPanelMouseClicked
 
@@ -371,7 +339,20 @@ public class PlayWindow extends javax.swing.JFrame {
 
     private void btnDrawPileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDrawPileActionPerformed
 
-        //Programar aquí el método de drawACard.*/
+        try 
+        {
+            ArrayList<Carta> drawedCards = game.drawACard(jugador, 1);
+            int largo = drawedCards.size();
+            for (int i = 0 ; i < largo ; i++)
+            {
+                placeOneCard(drawedCards.get(i));
+            }
+        } 
+        
+        catch (Exception ex)
+        {
+            Logger.getLogger(PlayWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnDrawPileActionPerformed
 
     private void serverListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_serverListActionPerformed
@@ -395,11 +376,10 @@ public class PlayWindow extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton brnUsarComando;
-    private javax.swing.JButton btnActivar;
     private javax.swing.JButton btnCallUNO;
     private javax.swing.JButton btnClearServerList;
     private javax.swing.JButton btnDrawPile;
-    private javax.swing.JButton btnPrueba;
+    private javax.swing.JButton btnStartGame;
     private javax.swing.JPanel callUNOPanel;
     private javax.swing.JScrollPane cardsDisplay;
     private javax.swing.JPanel cardsDisplayPanel;
@@ -407,7 +387,6 @@ public class PlayWindow extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JLabel lblDiscardPile;
     private javax.swing.JLabel lblServerComandos;
-    private java.awt.List lista;
     private javax.swing.JPanel panelFondo;
     private java.awt.List serverList;
     private javax.swing.JPanel serverPanel;

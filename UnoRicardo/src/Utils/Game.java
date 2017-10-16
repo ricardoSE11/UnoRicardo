@@ -67,7 +67,7 @@ public class Game extends UnicastRemoteObject implements IGame , IObservable , S
          //for each
          for(IObservador o:observadores)
          {
-             o.update();
+             o.hasToStartGUIS();
          }
     }
 
@@ -91,6 +91,7 @@ public class Game extends UnicastRemoteObject implements IGame , IObservable , S
         int nuevoID = players.size() + 1;
         j.setId(nuevoID);
         System.out.println("Estamos añadiendo al jugador:" + j.getName() + "con el ID: " + nuevoID);
+        notificar();
         this.players.add(j);
     }
 
@@ -111,7 +112,7 @@ public class Game extends UnicastRemoteObject implements IGame , IObservable , S
     
     @Override
     public void inicializarDrawPile() throws Exception {
-        System.out.println("Estamos inicializando el DrawPile con:" + players.size() + "jugadores");
+        System.out.println("Estamos inicializando el DrawPile con: " + players.size() + "jugadores");
          this.drawPile = generadorDeCartas.generateBiggerDeck(players.size());
     }
     
@@ -152,6 +153,22 @@ public class Game extends UnicastRemoteObject implements IGame , IObservable , S
     public boolean isGameOn() throws Exception {
         return this.gameOn;
     }
+
+    @Override
+    public ArrayList<Carta> drawACard(Jugador j, int amountOfCards) throws Exception {
+        System.out.println("El jugador: " + j.getName() + "está agarrando " + amountOfCards + " cartas." );
+        ArrayList<Carta> drawedCards = new ArrayList<>();
+        ArrayList<Carta> playerHand = j.getHand();
+        for (int i = 0; i < amountOfCards ; i++)
+        {
+            Carta cardToDraw = drawPile.get(0);
+            playerHand.add(cardToDraw);
+            drawedCards.add(cardToDraw);
+            drawPile.remove(cardToDraw);
+        }
+        return drawedCards;
+    }
+
 
     
 

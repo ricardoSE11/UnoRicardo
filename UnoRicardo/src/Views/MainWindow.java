@@ -4,10 +4,12 @@ package Views;
 
 import Comun.IGame;
 import Utils.Carta;
+import Utils.IObservador;
 import Utils.Jugador;
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 
 public class MainWindow extends javax.swing.JFrame {
@@ -18,11 +20,7 @@ public class MainWindow extends javax.swing.JFrame {
         initComponents();
     }
 
-    public void activar()
-    {
-        this.setVisible(true);
-    }
-    
+
     
 
     
@@ -198,23 +196,28 @@ public class MainWindow extends javax.swing.JFrame {
             int cantPlayers = game.getJugadores().size();
             game.añadirJugador(nuevoJugador);//potencial breakpoint
             
-            if (cantPlayers >= 1)
+            if (cantPlayers >= 2)
             {
                 game.inicializarDrawPile();
                 game.shuffleCards();
-                
                 game.dealCardsToAllPlayers();
                 
-                int posicionActual = game.getJugadores().size() - 1; 
-
-                PlayWindow pw = new PlayWindow(game , game.getJugadores().get(posicionActual));
+                            
+                int posicionActual = game.getJugadores().size() - 1;
+                //Tenemos que hacer esto para poder tener el jugador que está en el server
+                Jugador jugadorActual = game.getJugadores().get(posicionActual);
+                
+                PlayWindow pw = new PlayWindow(game , jugadorActual);
                 pw.setVisible(true);
+                this.dispose();
             }
             
             else
             {
-                System.out.println("No hay suficientes jugadores");
+                JOptionPane.showMessageDialog(null, "No hay suficientes jugadores");
             }
+            
+
         } 
         
         catch (Exception ex) 
@@ -241,6 +244,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JTextField txfUserIP;
     private javax.swing.JTextField txfUserName;
     // End of variables declaration//GEN-END:variables
+
 
 }//End of Class
 

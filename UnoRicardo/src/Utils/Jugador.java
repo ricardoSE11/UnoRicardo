@@ -6,7 +6,7 @@ import java.rmi.Remote;
 import java.util.ArrayList;
 
 
-public class Jugador implements IObservador, Serializable 
+public class Jugador implements  Serializable 
 {
     private String ip;
     private int id;
@@ -70,11 +70,9 @@ public class Jugador implements IObservador, Serializable
         this.hasOnecard = hasOnecard;
     }
     
-    
-    
-    @Override
-    public void update() {
-        //acción a realizar después de que se juegue una carta o algo así
-        System.out.println("EL JUEGO ESTÁ HACIENDO CAMBIOS");
+    public Carta playCarta(int cardIndex)
+    {
+        return this.hand.get(cardIndex);
     }
+    
 }
