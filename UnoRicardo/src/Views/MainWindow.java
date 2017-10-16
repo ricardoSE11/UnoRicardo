@@ -7,6 +7,8 @@ import Utils.Carta;
 import Utils.IObservador;
 import Utils.Jugador;
 import java.io.Serializable;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -185,7 +187,12 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_btnPlayActionPerformed
 
     private void btnSetUserDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSetUserDataActionPerformed
-        String ip = txfUserIP.getText();
+        String ip = null;
+        try {
+            ip = InetAddress.getLocalHost().getHostAddress(); //Obtiene el ip de la maquina
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
         String nombre = txfUserName.getText();
         
         Jugador nuevoJugador = new Jugador(nombre , ip);

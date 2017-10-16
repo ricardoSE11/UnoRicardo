@@ -6,12 +6,9 @@
 package Cliente;
 
 import Comun.IGame;
-import Utils.Jugador;
-import Utils.Pipo;
-import Utils.Piposo;
 import Views.MainWindow;
-import Views.PlayWindow;
-import java.net.InetAddress;
+import Views.ServerIPDialog;
+
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
@@ -25,9 +22,13 @@ public class MainCliente {
     {
         try 
         {
-            //ip "200.200.10.36"
-            String ip = InetAddress.getLocalHost().getHostAddress();
-            Registry miRegistro = LocateRegistry.getRegistry(ip , 9500);
+
+            ServerIPDialog ipDialog=new ServerIPDialog();//Crea el dialog
+            ipDialog.pack();//lo carga
+
+            ipDialog.setVisible(true);//Lo muestra
+            String serverIP= ipDialog.getIp();//Obtiene el ip digitado
+            Registry miRegistro = LocateRegistry.getRegistry(serverIP , 9500);
             IGame juego = (IGame)miRegistro.lookup("Juegito");
             
             //Sección de pruebas

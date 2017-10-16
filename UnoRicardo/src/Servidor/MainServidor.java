@@ -7,6 +7,8 @@ package Servidor;
 
 import Comun.IGame;
 import Utils.Game;
+
+import java.net.InetAddress;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -30,7 +32,7 @@ public class MainServidor implements java.io.Serializable
             */
             //gui();
             
-            System.out.println("Servidor ON");
+            System.out.println("Servidor ON en: "+ InetAddress.getLocalHost().getHostAddress());
         }
         
         catch (Exception e)
