@@ -5,6 +5,7 @@
  */
 package Comun;
 
+import Utils.Carta;
 import Utils.IObservador;
 import Utils.Jugador;
 import Utils.Pipo;
@@ -25,5 +26,15 @@ public interface IGame extends Remote
     public ArrayList<IObservador> getObservadores ()throws Exception;
     
     public ArrayList<Jugador> getJugadores() throws Exception;
+    
+    public void añadirJugador(Jugador j) throws Exception;
+    
+    public void shuffleCards(ArrayList<Carta> deck)throws Exception;
+    
+    public void inicializarDrawPile()throws Exception;
+    
+    public void dealCardsToPlayer(Jugador j)throws Exception;
+    
+    public void dealCardsToAllPlayers()throws Exception;
 
 }

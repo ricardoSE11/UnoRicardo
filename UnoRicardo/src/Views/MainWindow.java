@@ -45,6 +45,7 @@ public class MainWindow extends javax.swing.JFrame {
         btnSetUserData = new javax.swing.JButton();
         btnPlay = new javax.swing.JButton();
         lblPrueba = new javax.swing.JLabel();
+        lblPruebaCarta = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(0, 0, 204));
@@ -93,6 +94,9 @@ public class MainWindow extends javax.swing.JFrame {
         lblPrueba.setForeground(new java.awt.Color(255, 255, 255));
         lblPrueba.setText("Prueba");
 
+        lblPruebaCarta.setForeground(new java.awt.Color(255, 255, 255));
+        lblPruebaCarta.setText("Carta");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -108,18 +112,20 @@ public class MainWindow extends javax.swing.JFrame {
                     .addComponent(txfUserIP))
                 .addGap(28, 28, 28)
                 .addComponent(btnSetUserData, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(37, 37, 37)
                 .addComponent(lblPrueba, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(109, 109, 109)
+                .addGap(58, 58, 58)
+                .addComponent(lblPruebaCarta)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnPlay, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(29, 29, 29))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addContainerGap()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
                             .addComponent(txfUserName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -128,14 +134,14 @@ public class MainWindow extends javax.swing.JFrame {
                             .addComponent(lblIP)
                             .addComponent(txfUserIP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(btnPlay, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(btnPlay, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblPrueba, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lblPrueba, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblPruebaCarta))
                     .addComponent(btnSetUserData, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -163,31 +169,26 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_txfUserIPActionPerformed
 
     private void btnPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlayActionPerformed
-        String ip = txfUserIP.getText();
-        String nombre = txfUserName.getText();
-        
-        Jugador nuevoJugador = new Jugador(nombre);
-        lblPrueba.setText(nuevoJugador.getName());
+
+        Integer numDePrueba = 88;
         
         try 
         {
-            game.getJugadores().add(nuevoJugador);
-        } 
-        
-        catch (Exception ex) 
-        {
-            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-    }//GEN-LAST:event_btnPlayActionPerformed
-
-    private void btnSetUserDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSetUserDataActionPerformed
-
-        Integer numDePrueba = null;
-        
-        try 
-        {
-            numDePrueba = game.getTurn();
+            numDePrueba = game.getJugadores().size();
+            if (numDePrueba >= 2)
+            {
+                game.inicializarDrawPile();
+                game.dealCardsToAllPlayers();
+                
+                Jugador primerJugador = game.getJugadores().get(0);
+                String color = primerJugador.getHand().get(0).getColor().toString();
+                lblPruebaCarta.setText(color);
+            }
+            
+            else
+            {
+                System.out.println("No hay suficientes jugadores");
+            }
         }
         
         catch (Exception ex) 
@@ -196,6 +197,27 @@ public class MainWindow extends javax.swing.JFrame {
         }
         
         lblPrueba.setText(numDePrueba.toString());
+    }//GEN-LAST:event_btnPlayActionPerformed
+
+    private void btnSetUserDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSetUserDataActionPerformed
+        String ip = txfUserIP.getText();
+        String nombre = txfUserName.getText();
+        
+        Jugador nuevoJugador = new Jugador(nombre , ip);
+        lblPrueba.setText(nuevoJugador.getName());
+        
+        try 
+        {
+            game.añadirJugador(nuevoJugador);//potencial breakpoint
+        } 
+        
+        catch (Exception ex) 
+        {
+            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        txfUserIP.setText("");
+        txfUserName.setText("");
 
     }//GEN-LAST:event_btnSetUserDataActionPerformed
 
@@ -208,6 +230,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JLabel lblIP;
     private javax.swing.JLabel lblPrueba;
+    private javax.swing.JLabel lblPruebaCarta;
     private javax.swing.JLabel lblWallPaper;
     private javax.swing.JTextField txfUserIP;
     private javax.swing.JTextField txfUserName;

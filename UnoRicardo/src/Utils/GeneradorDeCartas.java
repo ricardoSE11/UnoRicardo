@@ -17,6 +17,42 @@ public class GeneradorDeCartas {
    {     
    }
    
+   public ArrayList<Carta> generateBiggerDeck(int cantidadDeJugadores)
+   {
+       if (cantidadDeJugadores <= 10)
+       {
+           ArrayList<Carta> biggerDeck = generateDeck();
+           return biggerDeck;
+       }
+       
+       else
+       {
+           int numeroMagico = cantidadDeJugadores - 10;
+           int contador = 0;
+           
+           ArrayList<Carta> biggerDeck = generateDeck();
+           
+           while (contador != numeroMagico)
+           {
+               for (int i = 0; i < 2; i++)
+               {
+                   biggerDeck.add(generateBlueCards().get(i));
+                   biggerDeck.add(generateRedCards().get(i));
+                   biggerDeck.add(generateGreenCards().get(i));
+                   biggerDeck.add(generateYellowCards().get(i));
+               }
+               
+               for (int j = 0 ; j < 2 ; j++)
+               {
+                   biggerDeck.add(generateWildCards().get(j));
+               }
+               contador++;
+           }
+           
+           return biggerDeck;
+       }
+   }
+   
    public ArrayList<Carta> generateDeck()
    {
        ArrayList<Carta> deckBasico = new ArrayList<>();

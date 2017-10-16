@@ -36,10 +36,10 @@ public class Game extends UnicastRemoteObject implements IGame , IObservable , S
         this.turn = 0;
     }
 
- 
-    
+
    public void añadirObservador(IObservador o)
    {
+       System.out.println("Agregando al observador:" + o.toString());
        observadores.add(o);
    }
    
@@ -63,6 +63,7 @@ public class Game extends UnicastRemoteObject implements IGame , IObservable , S
     //Utilizar este método, dentro de otro método que lo necesite. (Con el código adecuado)
     @Override
     public void notificar() {
+        System.out.println("Estamos notificando a los observadores");
          //for each
          for(IObservador o:observadores)
          {
@@ -84,6 +85,58 @@ public class Game extends UnicastRemoteObject implements IGame , IObservable , S
     public ArrayList<Jugador> getJugadores() throws Exception {
         return this.players;
     }
+
+    @Override
+    public void añadirJugador(Jugador j) throws Exception {
+        System.out.println("Estamos añadiendo al jugador:" + j.getName());
+        this.players.add(j);
+    }
+
+    @Override
+    public void shuffleCards(ArrayList<Carta> deck) throws Exception {
+        int largo = deck.size();
+        for (int i = 0 ; i < largo ; i++)
+        {
+            int nuevaPosicion = i + (int)(Math.random() * (largo - i));
+            //Intercambiamos la posición de dos cartas
+            Carta cartaActual = deck.get(i);
+            Carta cartaTemporal = deck.get(nuevaPosicion);
+            deck.set(nuevaPosicion, cartaActual);
+            deck.set(i, cartaTemporal);
+        }
+    }
+    
+    @Override
+    public void inicializarDrawPile() throws Exception {
+        System.out.println("Estamos inicializando el DrawPile con:" + players.size() + "jugadores");
+         this.drawPile = generadorDeCartas.generateBiggerDeck(players.size());
+    }
+    
+    //Antes de usar este método hay que inicializar el deck del cual se va a repartir
+    @Override
+    public void dealCardsToPlayer(Jugador j) throws Exception {
+        for (int i = 0 ; i < 7 ; i++)
+        {
+            ArrayList<Carta> manoDeJugador = j.getHand();
+            Carta cartaActual = drawPile.get(i);
+            //Agregamos la carta a la mano del jugador y la eliminamos del maso
+            manoDeJugador.add(cartaActual);
+            drawPile.remove(cartaActual);
+        }
+    }
+
+    @Override
+    public void dealCardsToAllPlayers() throws Exception {
+        int cantidadJugadores = players.size();
+        System.out.println("Estamos repartiendo cartas a:" + cantidadJugadores + "jugadores");
+        for (int i = 0 ; i < cantidadJugadores ; i++)
+        {
+            dealCardsToPlayer(players.get(i));
+        }
+    }
+
+    
+
 
     
 }

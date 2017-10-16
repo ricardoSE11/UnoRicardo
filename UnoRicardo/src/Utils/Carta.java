@@ -1,8 +1,10 @@
 
 package Utils;
 
+import java.io.Serializable;
 
-public class Carta 
+
+public class Carta implements Serializable
 {
     private Color color;
     private Tipo tipo;
