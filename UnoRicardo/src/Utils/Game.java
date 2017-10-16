@@ -23,6 +23,8 @@ public class Game extends UnicastRemoteObject implements IGame , IObservable , S
     private GeneradorDeCartas generadorDeCartas;
     private ArrayList<Carta> drawPile;
     private ArrayList<Carta> discardPile;
+    private int primerTurno;
+    private int ultimoTurno;
     private int turn; //will be assigned with matching IDs
     private boolean adelante; //Quiere decir que los turnos van del menor al mayor
 
@@ -34,7 +36,9 @@ public class Game extends UnicastRemoteObject implements IGame , IObservable , S
         this.generadorDeCartas = new GeneradorDeCartas();
         this.drawPile = new ArrayList<>();
         this.discardPile = new ArrayList<>();
-        this.turn = 0; //Debe empezar en 1 porque el primer ID va a ser 1
+        this.primerTurno = 1;
+        this.ultimoTurno = players.size();
+        this.turn = 1; //Debe empezar en 1 porque el primer ID va a ser 1
         this.adelante = true;
     }
 
@@ -237,12 +241,14 @@ public class Game extends UnicastRemoteObject implements IGame , IObservable , S
 
     @Override
     public void startGame() throws Exception {
-        this.turn = 1;
         notificar();
         initializeDrawPile();
         shuffleCards();
         dealCardsToAllPlayers();
         initializeDiscardPile();
+        this.turn = 1;
+        this.ultimoTurno = players.size();
+        
     }
 
     @Override
@@ -259,12 +265,44 @@ public class Game extends UnicastRemoteObject implements IGame , IObservable , S
     }
 
     @Override
-    public int getNexTurn() throws Exception {
-        return 2;
+    public void getNexTurn() throws Exception {
+        if (adelante == true)
+        {    
+            if (turn + 1 > ultimoTurno) 
+            {
+                turn = primerTurno;
+            }
+            
+            else
+            {
+                turn  += 1;
+            }
+                
+        }
+        
+        else 
+        {
+            if (turn - 1 == 0) 
+            {
+                turn = ultimoTurno;
+            }
+            
+            else
+                turn -= 1;
+        }
+        
+        notificar();
+        System.out.println("El turno quedó en el valor: " + turn);
+        
+        
+
     }
 
-    
-    
+    @Override
+    public void reversa() throws Exception {
+        notificar();
+        adelante = false;
+    }
 
 
     

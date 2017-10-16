@@ -50,6 +50,7 @@ public class MainServidor implements java.io.Serializable
                 {
                     if (juego.isGameOn())
                     {
+                        System.out.println("");
                         System.out.println("El juego ya empezó");
                     }
                     
