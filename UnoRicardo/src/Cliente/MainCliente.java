@@ -6,6 +6,7 @@
 package Cliente;
 
 import Comun.IGame;
+import Utils.IObservador;
 import Views.MainWindow;
 import Views.ServerIPDialog;
 
@@ -16,7 +17,7 @@ import java.rmi.registry.Registry;
  *
  * @author rshum
  */
-public class MainCliente {
+public class MainCliente  {
     
     public static void main(String[] args) 
     {
@@ -25,17 +26,17 @@ public class MainCliente {
 
             ServerIPDialog ipDialog=new ServerIPDialog();//Crea el dialog
             ipDialog.pack();//lo carga
-
             ipDialog.setVisible(true);//Lo muestra
             String serverIP= ipDialog.getIp();//Obtiene el ip digitado
+            
             Registry miRegistro = LocateRegistry.getRegistry(serverIP , 9500);
             IGame juego = (IGame)miRegistro.lookup("Juegito");
             
-            //Sección de pruebas
-              //-------o-------\\
-            //Termina sección de pruebas
+            /*Sección de pruebas
+                -juego.startGame();-
+            Termina sección de pruebas*/
             
-            MainWindow mw = new MainWindow(juego);
+            MainWindow mw = new MainWindow(juego , serverIP);
             mw.setVisible(true);
             
         } 
@@ -45,4 +46,7 @@ public class MainCliente {
             e.printStackTrace();
         }
     }
+
 }
+
+    

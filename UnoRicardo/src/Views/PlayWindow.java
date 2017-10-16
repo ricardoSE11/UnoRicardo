@@ -23,26 +23,28 @@ import javax.swing.JOptionPane;
 import Utils.Jugador;
 import Comun.IGame;
 import Utils.Carta;
+import Utils.IObservador;
 
-/**
- *
- * @author rshum
- */
-public class PlayWindow extends javax.swing.JFrame {
+
+public class PlayWindow extends javax.swing.JFrame implements IObservador {
     IGame game;
     Jugador jugador;
     private List<JButton> botonesDeCartas ; //lista de Botones
     private int indice;
     private int cartaEscogida;
+    String ip;
 
 
     // -------------------Constructor---------------------------
-    public PlayWindow(IGame g , Jugador j)
+    public PlayWindow(IGame g , Jugador j, String ip)
     {
         initComponents();//SUMAMENTE IMPORTANTE
         this.botonesDeCartas = new ArrayList<>();
         this.jugador = j;
         this.game = g;
+        this.ip = ip;
+        
+
     }
 
 
@@ -64,20 +66,26 @@ public class PlayWindow extends javax.swing.JFrame {
                 //Si = 0, No = otra cosa >.<
                 int yesOrNo = JOptionPane.showConfirmDialog(null, "¿Desea jugar esta carta?" ,
                         "Confirmación de jugada", JOptionPane.YES_NO_OPTION );
-                
+
                 if (yesOrNo == 0)
                 {
                     //Aquí debe ir el método de jugar del jugador respectivo.
-                    System.out.println("El jugador: " + jugador.getName() +  " jugó la carta de índice: " + cartaEscogida);
-                    Carta playedCard = jugador.playCarta(cartaEscogida);
+
                     boolean wasPlayed;
                     
                     try 
                     {
-                        wasPlayed = game.placeCardOnDiscardPile(playedCard);
+                        int id = jugador.getId() - 1;
+                        Jugador player = game.getJugadores().get(id);
+                        
+                        System.out.println("El jugador: " + jugador.getName() + " jugó la carta de índice: " + cartaEscogida);
+                        Carta playedCard = player.playCarta(cartaEscogida);
+                        
+                        wasPlayed = game.placeCardOnDiscardPile(playedCard);//Si fue posicionada en DiscardPile
                         if (wasPlayed)
                         {
-                            jugador.getHand().remove(cartaEscogida);
+                            cardsDisplayPanel.remove(cartaEscogida);
+                            player.getHand().remove(cartaEscogida);
                         }
                         
                         else
@@ -148,8 +156,8 @@ public class PlayWindow extends javax.swing.JFrame {
         txfServerComandos = new javax.swing.JTextField();
         lblServerComandos = new javax.swing.JLabel();
         serverList = new java.awt.List();
-        brnUsarComando = new javax.swing.JButton();
-        btnClearServerList = new javax.swing.JButton();
+        btnCantidadJugadores = new javax.swing.JButton();
+        btnSeePlayerID = new javax.swing.JButton();
         callUNOPanel = new javax.swing.JPanel();
         btnCallUNO = new javax.swing.JButton();
 
@@ -167,14 +175,14 @@ public class PlayWindow extends javax.swing.JFrame {
         cardsDisplayPanel.setLayout(new java.awt.GridLayout(0, 7));
         cardsDisplay.setViewportView(cardsDisplayPanel);
 
-        btnStartGame.setIcon(new javax.swing.ImageIcon("f:\\Users\\rshum\\Desktop\\ImagenesUNO\\rugby-fan-with-an-encouraging-signal-with-word-go.png")); // NOI18N
+        btnStartGame.setText("Ver cartas");
         btnStartGame.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnStartGameActionPerformed(evt);
             }
         });
 
-        btnSetDiscardPile.setIcon(new javax.swing.ImageIcon("f:\\Users\\rshum\\Desktop\\ImagenesUNO\\play.png")); // NOI18N
+        btnSetDiscardPile.setText("Actualizar Discard Pile");
         btnSetDiscardPile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSetDiscardPileActionPerformed(evt);
@@ -188,15 +196,15 @@ public class PlayWindow extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(btnSetDiscardPile, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE)
-                    .addComponent(btnStartGame, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(108, 108, 108))
+                    .addComponent(btnStartGame, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnSetDiscardPile, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE))
+                .addGap(107, 107, 107))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(btnStartGame, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnStartGame, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnSetDiscardPile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -244,17 +252,17 @@ public class PlayWindow extends javax.swing.JFrame {
             }
         });
 
-        brnUsarComando.setText("Usar");
-        brnUsarComando.addActionListener(new java.awt.event.ActionListener() {
+        btnCantidadJugadores.setText("Cantidad de Jugadores");
+        btnCantidadJugadores.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                brnUsarComandoActionPerformed(evt);
+                btnCantidadJugadoresActionPerformed(evt);
             }
         });
 
-        btnClearServerList.setText("Limpiar");
-        btnClearServerList.addActionListener(new java.awt.event.ActionListener() {
+        btnSeePlayerID.setText("Player ID");
+        btnSeePlayerID.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnClearServerListActionPerformed(evt);
+                btnSeePlayerIDActionPerformed(evt);
             }
         });
 
@@ -269,10 +277,10 @@ public class PlayWindow extends javax.swing.JFrame {
                     .addGroup(serverPanelLayout.createSequentialGroup()
                         .addGroup(serverPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(lblServerComandos, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)
-                            .addComponent(btnClearServerList, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(btnSeePlayerID, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
                         .addGroup(serverPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(brnUsarComando, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnCantidadJugadores, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(txfServerComandos, javax.swing.GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE))))
                 .addContainerGap(25, Short.MAX_VALUE))
         );
@@ -287,8 +295,8 @@ public class PlayWindow extends javax.swing.JFrame {
                     .addComponent(txfServerComandos, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(serverPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(brnUsarComando)
-                    .addComponent(btnClearServerList))
+                    .addComponent(btnCantidadJugadores)
+                    .addComponent(btnSeePlayerID))
                 .addContainerGap(20, Short.MAX_VALUE))
         );
 
@@ -368,7 +376,18 @@ public class PlayWindow extends javax.swing.JFrame {
     //Aquí se desactiva el botón de UNO. PROGRAMAR, POSTERIORMENTE, ADECUADAMENTE.
     private void btnStartGameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartGameActionPerformed
 
-        placePlayerCards(jugador);
+        int id = jugador.getId() - 1;
+        try 
+        {
+            Jugador player = game.getJugadores().get(id);
+            placePlayerCards(player);
+        } 
+        
+        catch (Exception ex) 
+        {
+            Logger.getLogger(PlayWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         btnCallUNO.setEnabled(false);
     }//GEN-LAST:event_btnStartGameActionPerformed
 
@@ -378,6 +397,8 @@ public class PlayWindow extends javax.swing.JFrame {
 
     private void btnDrawPileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDrawPileActionPerformed
 
+        int id = jugador.getId() - 1;
+        
         try 
         {
             ArrayList<Carta> drawedCards = game.drawACard(jugador, 1);
@@ -398,7 +419,7 @@ public class PlayWindow extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_serverListActionPerformed
 
-    private void brnUsarComandoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_brnUsarComandoActionPerformed
+    private void btnCantidadJugadoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCantidadJugadoresActionPerformed
 
         int numDePrueba;
         try 
@@ -411,23 +432,36 @@ public class PlayWindow extends javax.swing.JFrame {
         {
             Logger.getLogger(PlayWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_brnUsarComandoActionPerformed
+    }//GEN-LAST:event_btnCantidadJugadoresActionPerformed
 
-    private void btnClearServerListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearServerListActionPerformed
-        // TODO add your handling code here:
-        serverList.removeAll();
-    }//GEN-LAST:event_btnClearServerListActionPerformed
+    private void btnSeePlayerIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeePlayerIDActionPerformed
+
+        int id = jugador.getId() - 1;
+        try 
+        {
+            Jugador player = game.getJugadores().get(id);
+            //int amountOfCards = player.getHand().size();
+            serverList.add(Integer.toString(id));
+            //serverList.removeAll();
+        } 
+        
+        catch (Exception ex) 
+        {
+            Logger.getLogger(PlayWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnSeePlayerIDActionPerformed
 
     private void btnCallUNOActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCallUNOActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnCallUNOActionPerformed
 
     private void btnSetDiscardPileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSetDiscardPileActionPerformed
-      
+
+        update();
         //Hace visible la última carta que esta en la DiscardPile
         int lastCardIndex = 0;
         try 
-        {
+        {   
             lastCardIndex = game.getDiscardPile().size() - 1;
             Carta lastCard = game.getDiscardPile().get(lastCardIndex);
             String imgString = getCardString(lastCard);
@@ -443,10 +477,10 @@ public class PlayWindow extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton brnUsarComando;
     private javax.swing.JButton btnCallUNO;
-    private javax.swing.JButton btnClearServerList;
+    private javax.swing.JButton btnCantidadJugadores;
     private javax.swing.JButton btnDrawPile;
+    private javax.swing.JButton btnSeePlayerID;
     private javax.swing.JButton btnSetDiscardPile;
     private javax.swing.JButton btnStartGame;
     private javax.swing.JPanel callUNOPanel;
@@ -461,4 +495,22 @@ public class PlayWindow extends javax.swing.JFrame {
     private javax.swing.JPanel serverPanel;
     private javax.swing.JTextField txfServerComandos;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void update() {
+
+        Registry miRegistro;
+        try 
+        {
+            miRegistro = LocateRegistry.getRegistry(ip , 9500);
+            IGame juego = (IGame)miRegistro.lookup("Juegito");
+        } 
+        catch (Exception ex) 
+        {
+            Logger.getLogger(PlayWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+
+
 }

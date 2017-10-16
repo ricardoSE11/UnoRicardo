@@ -117,10 +117,10 @@
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="btnSetDiscardPile" pref="163" max="32767" attributes="0"/>
                           <Component id="btnStartGame" max="32767" attributes="0"/>
+                          <Component id="btnSetDiscardPile" pref="164" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="108" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="107" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -128,7 +128,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btnStartGame" min="-2" pref="58" max="-2" attributes="0"/>
+                      <Component id="btnStartGame" min="-2" pref="23" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="btnSetDiscardPile" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -139,9 +139,7 @@
           <SubComponents>
             <Component class="javax.swing.JButton" name="btnStartGame">
               <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="2" name="f:\Users\rshum\Desktop\ImagenesUNO\rugby-fan-with-an-encouraging-signal-with-word-go.png"/>
-                </Property>
+                <Property name="text" type="java.lang.String" value="Ver cartas"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnStartGameActionPerformed"/>
@@ -149,9 +147,7 @@
             </Component>
             <Component class="javax.swing.JButton" name="btnSetDiscardPile">
               <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="2" name="f:\Users\rshum\Desktop\ImagenesUNO\play.png"/>
-                </Property>
+                <Property name="text" type="java.lang.String" value="Actualizar Discard Pile"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSetDiscardPileActionPerformed"/>
@@ -223,11 +219,11 @@
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                   <Component id="lblServerComandos" pref="81" max="32767" attributes="0"/>
-                                  <Component id="btnClearServerList" max="32767" attributes="0"/>
+                                  <Component id="btnSeePlayerID" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="brnUsarComando" max="32767" attributes="0"/>
+                                  <Component id="btnCantidadJugadores" max="32767" attributes="0"/>
                                   <Component id="txfServerComandos" pref="255" max="32767" attributes="0"/>
                               </Group>
                           </Group>
@@ -248,8 +244,8 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="brnUsarComando" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnClearServerList" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnCantidadJugadores" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnSeePlayerID" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace pref="20" max="32767" attributes="0"/>
                   </Group>
@@ -273,20 +269,20 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="serverListActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="brnUsarComando">
+            <Component class="javax.swing.JButton" name="btnCantidadJugadores">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Usar"/>
+                <Property name="text" type="java.lang.String" value="Cantidad de Jugadores"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="brnUsarComandoActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCantidadJugadoresActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="btnClearServerList">
+            <Component class="javax.swing.JButton" name="btnSeePlayerID">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Limpiar"/>
+                <Property name="text" type="java.lang.String" value="Player ID"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnClearServerListActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSeePlayerIDActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>

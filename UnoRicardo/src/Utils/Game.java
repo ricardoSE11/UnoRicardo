@@ -24,6 +24,7 @@ public class Game extends UnicastRemoteObject implements IGame , IObservable , S
     private ArrayList<Carta> drawPile;
     private ArrayList<Carta> discardPile;
     private int turn; //will be assigned with matching IDs
+    private boolean adelante; //Quiere decir que los turnos van del menor al mayor
 
     public Game() throws RemoteException
     { 
@@ -34,6 +35,7 @@ public class Game extends UnicastRemoteObject implements IGame , IObservable , S
         this.drawPile = new ArrayList<>();
         this.discardPile = new ArrayList<>();
         this.turn = 0; //Debe empezar en 1 porque el primer ID va a ser 1
+        this.adelante = true;
     }
 
 
@@ -67,12 +69,13 @@ public class Game extends UnicastRemoteObject implements IGame , IObservable , S
          //for each
          for(IObservador o:observadores)
          {
-             o.hasToStartGUIS();
+             o.update();
          }
     }
 
     @Override
     public int getTurn() throws Exception {
+        notificar();
         return this.turn;
     }
 
@@ -88,15 +91,17 @@ public class Game extends UnicastRemoteObject implements IGame , IObservable , S
 
     @Override
     public void añadirJugador(Jugador j) throws Exception {
+        notificar();
         int nuevoID = players.size() + 1;
         j.setId(nuevoID);
-        System.out.println("Estamos añadiendo al jugador:" + j.getName() + "con el ID: " + nuevoID);
+        System.out.println("Estamos añadiendo al jugador: " + j.getName() + " con el ID: " + nuevoID);
         notificar();
         this.players.add(j);
     }
 
     @Override
     public void shuffleCards() throws Exception {
+        notificar();
         int largo = this.drawPile.size();
         for (int i = 0 ; i < largo ; i++)
         {
@@ -112,13 +117,15 @@ public class Game extends UnicastRemoteObject implements IGame , IObservable , S
     
     @Override
     public void initializeDrawPile() throws Exception {
-        System.out.println("Estamos inicializando el DrawPile con: " + players.size() + "jugadores");
+        notificar();
+        System.out.println("Estamos inicializando el DrawPile con: " + players.size() + " jugadores");
          this.drawPile = generadorDeCartas.generateBiggerDeck(players.size());
     }
     
     //Antes de usar este método hay que inicializar el deck del cual se va a repartir
     @Override
     public void dealCardsToPlayer(Jugador j) throws Exception {
+        notificar();
         for (int i = 0 ; i < 7 ; i++)
         {
             ArrayList<Carta> manoDeJugador = j.getHand();
@@ -131,8 +138,9 @@ public class Game extends UnicastRemoteObject implements IGame , IObservable , S
 
     @Override
     public void dealCardsToAllPlayers() throws Exception {
+        notificar();
         int cantidadJugadores = players.size();
-        System.out.println("Estamos repartiendo cartas a:" + cantidadJugadores + "jugadores");
+        System.out.println("Estamos repartiendo cartas a: " + cantidadJugadores + " jugadores");
         for (int i = 0 ; i < cantidadJugadores ; i++)
         {
             dealCardsToPlayer(players.get(i));
@@ -156,7 +164,8 @@ public class Game extends UnicastRemoteObject implements IGame , IObservable , S
 
     @Override
     public ArrayList<Carta> drawACard(Jugador j, int amountOfCards) throws Exception {
-        System.out.println("El jugador: " + j.getName() + "está agarrando " + amountOfCards + " cartas." );
+        notificar();
+        System.out.println("El jugador: " + j.getName() + " está agarrando " + amountOfCards + " cartas." );
         ArrayList<Carta> drawedCards = new ArrayList<>();
         ArrayList<Carta> playerHand = j.getHand();
         for (int i = 0; i < amountOfCards ; i++)
@@ -172,6 +181,7 @@ public class Game extends UnicastRemoteObject implements IGame , IObservable , S
     //El DrawPile debe ser inicializado antes de usar este método
     @Override
     public void initializeDiscardPile() throws Exception {
+        notificar();
         int largo = drawPile.size();
         for (int i = 0; i < largo ; i++)
         {
@@ -188,6 +198,7 @@ public class Game extends UnicastRemoteObject implements IGame , IObservable , S
 
     @Override
     public boolean isPlayValid(Carta cardToPlay) throws Exception {
+        notificar();
         int lastCardIndex = discardPile.size() - 1;
         Carta cardToCompareWith = discardPile.get(lastCardIndex);
         
@@ -209,6 +220,7 @@ public class Game extends UnicastRemoteObject implements IGame , IObservable , S
     // ----------------------------Pendiente-----------------------------------
     @Override
     public boolean placeCardOnDiscardPile(Carta playedCard) throws Exception {
+        notificar();
         if (isPlayValid(playedCard))
         {
             System.out.println("Se jugó la carta: " + playedCard.getNombre().toString()  + " " + playedCard.getColor().toString());
@@ -225,13 +237,28 @@ public class Game extends UnicastRemoteObject implements IGame , IObservable , S
 
     @Override
     public void startGame() throws Exception {
+        this.turn = 1;
+        notificar();
         initializeDrawPile();
         shuffleCards();
         dealCardsToAllPlayers();
         initializeDiscardPile();
     }
 
+    @Override
+    public void endGame() throws Exception {
+        notificar();
+        this.gameOn = false;
+    }
 
+    //Método de prueba
+    @Override
+    public void setTurn(int turno) throws Exception {
+        notificar();
+        this.turn = turno;
+    }
+
+    
     
 
 

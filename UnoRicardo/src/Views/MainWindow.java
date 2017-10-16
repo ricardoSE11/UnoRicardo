@@ -9,16 +9,23 @@ import Utils.Jugador;
 import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 
-public class MainWindow extends javax.swing.JFrame {
+public class MainWindow extends javax.swing.JFrame implements IObservador {
     IGame game;
+    String ip;
 
-    public MainWindow(IGame g) throws Exception {
+    public MainWindow(IGame g , String ip) throws Exception {
+        this.ip = ip;
         this.game = g;
+       
+        
         initComponents();
     }
 
@@ -41,12 +48,9 @@ public class MainWindow extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         txfUserName = new javax.swing.JTextField();
-        lblIP = new javax.swing.JLabel();
-        txfUserIP = new javax.swing.JTextField();
         btnSetUserData = new javax.swing.JButton();
         btnPlay = new javax.swing.JButton();
         lblPrueba = new javax.swing.JLabel();
-        lblPruebaCarta = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(0, 0, 204));
@@ -61,21 +65,11 @@ public class MainWindow extends javax.swing.JFrame {
 
         jPanel3.setBackground(new java.awt.Color(0, 51, 153));
 
-        jLabel1.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 204, 0));
         jLabel1.setText("Name: ");
 
         txfUserName.setFont(new java.awt.Font("Century Gothic", 0, 11)); // NOI18N
-
-        lblIP.setForeground(new java.awt.Color(255, 204, 0));
-        lblIP.setText("IP:");
-
-        txfUserIP.setFont(new java.awt.Font("Century Gothic", 0, 11)); // NOI18N
-        txfUserIP.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txfUserIPActionPerformed(evt);
-            }
-        });
 
         btnSetUserData.setIcon(new javax.swing.ImageIcon("F:\\Users\\rshum\\Desktop\\ImagenesUNO\\check-mark.png")); // NOI18N
         btnSetUserData.setOpaque(false);
@@ -95,28 +89,19 @@ public class MainWindow extends javax.swing.JFrame {
         lblPrueba.setForeground(new java.awt.Color(255, 255, 255));
         lblPrueba.setText("Prueba");
 
-        lblPruebaCarta.setForeground(new java.awt.Color(255, 255, 255));
-        lblPruebaCarta.setText("Carta");
-
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblIP))
+                .addContainerGap()
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txfUserName, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
-                    .addComponent(txfUserIP))
-                .addGap(28, 28, 28)
-                .addComponent(btnSetUserData, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(37, 37, 37)
-                .addComponent(lblPrueba, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(58, 58, 58)
-                .addComponent(lblPruebaCarta)
+                .addComponent(txfUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30)
+                .addComponent(btnSetUserData, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(70, 70, 70)
+                .addComponent(lblPrueba)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnPlay, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(29, 29, 29))
@@ -124,27 +109,22 @@ public class MainWindow extends javax.swing.JFrame {
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
-                            .addComponent(txfUserName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(22, 22, 22)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblIP)
-                            .addComponent(txfUserIP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(btnPlay, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap()
+                        .addComponent(btnPlay, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
+                            .addGap(19, 19, 19)
+                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txfUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jPanel3Layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(lblPrueba)
+                                .addComponent(btnSetUserData, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap())
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(lblPrueba, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lblPruebaCarta))
-                    .addComponent(btnSetUserData, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -165,17 +145,14 @@ public class MainWindow extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txfUserIPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txfUserIPActionPerformed
-
-    }//GEN-LAST:event_txfUserIPActionPerformed
-
     private void btnPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlayActionPerformed
 
         Integer numDePrueba = 88;
         
         try 
         {
-            numDePrueba = game.getJugadores().size();
+            numDePrueba = game.getTurn();
+            lblPrueba.setText(Integer.toString(numDePrueba));
         }
         
         catch (Exception ex) 
@@ -183,49 +160,32 @@ public class MainWindow extends javax.swing.JFrame {
             Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        lblPrueba.setText(numDePrueba.toString());
     }//GEN-LAST:event_btnPlayActionPerformed
 
     private void btnSetUserDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSetUserDataActionPerformed
+        this.btnSetUserData.setEnabled(false);
         String ip = null;
         try {
             ip = InetAddress.getLocalHost().getHostAddress(); //Obtiene el ip de la maquina
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
-        String nombre = txfUserName.getText();
         
+        String nombre = txfUserName.getText();
         Jugador nuevoJugador = new Jugador(nombre , ip);
-        lblPrueba.setText(nuevoJugador.getName());
 
         try 
         {
             int cantPlayers = game.getJugadores().size();
             game.añadirJugador(nuevoJugador);//potencial breakpoint
             
-            if (cantPlayers >= 1)
-            {
-                game.initializeDrawPile();
-                game.shuffleCards();
-                game.dealCardsToAllPlayers();
-                game.initializeDiscardPile();
-                
-                            
-                int posicionActual = game.getJugadores().size() - 1;
-                //Tenemos que hacer esto para poder tener el jugador que está en el server
-                Jugador jugadorActual = game.getJugadores().get(posicionActual);
-                
-                PlayWindow pw = new PlayWindow(game , jugadorActual);
-                pw.setVisible(true);
-                this.dispose();
-            }
-            
-            else
-            {
-                JOptionPane.showMessageDialog(null, "No hay suficientes jugadores");
-            }
-            
+            int posicionActual = game.getJugadores().size() - 1;
+            //Tenemos que hacer esto para poder tener el jugador que está en el server
+            Jugador jugadorActual = game.getJugadores().get(posicionActual);
 
+            PlayWindow pw = new PlayWindow(game, jugadorActual, ip);
+            pw.setVisible(true);
+            this.dispose();
         } 
         
         catch (Exception ex) 
@@ -233,7 +193,6 @@ public class MainWindow extends javax.swing.JFrame {
             Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        txfUserIP.setText("");
         txfUserName.setText("");
         
         
@@ -247,13 +206,25 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JLabel lblIP;
     private javax.swing.JLabel lblPrueba;
-    private javax.swing.JLabel lblPruebaCarta;
     private javax.swing.JLabel lblWallPaper;
-    private javax.swing.JTextField txfUserIP;
     private javax.swing.JTextField txfUserName;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void update() 
+    {
+        try 
+        {
+            Registry miRegistro = LocateRegistry.getRegistry(ip , 9500);
+            IGame juego = (IGame)miRegistro.lookup("Juegito");
+        }
+        
+        catch (Exception ex) 
+        {
+            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
 
 }//End of Class
