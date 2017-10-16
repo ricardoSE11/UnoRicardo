@@ -201,6 +201,7 @@ public class MainWindow extends javax.swing.JFrame {
                 game.inicializarDrawPile();
                 game.shuffleCards();
                 game.dealCardsToAllPlayers();
+                game.initializeDiscardPile();
                 
                             
                 int posicionActual = game.getJugadores().size() - 1;
@@ -227,6 +228,8 @@ public class MainWindow extends javax.swing.JFrame {
 
         txfUserIP.setText("");
         txfUserName.setText("");
+        
+        
 
     }//GEN-LAST:event_btnSetUserDataActionPerformed
 

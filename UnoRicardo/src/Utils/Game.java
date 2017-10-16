@@ -169,6 +169,40 @@ public class Game extends UnicastRemoteObject implements IGame , IObservable , S
         return drawedCards;
     }
 
+    //El DrawPile debe ser inicializado antes de usar este método
+    @Override
+    public void initializeDiscardPile() throws Exception {
+        Carta firstCard = drawPile.get(0);
+        discardPile.add(firstCard);
+        drawPile.remove(firstCard);
+    }
+
+    @Override
+    public boolean isPlayValid(Carta cardToPlay) throws Exception {
+        int lastCardIndex = discardPile.size() - 1;
+        Carta cardToCompareWith = discardPile.get(lastCardIndex);
+        
+        //Color
+        if (cardToPlay.getColor().equals(cardToCompareWith.getColor()))
+            return true;
+        
+        //Símbolo
+        else if (cardToPlay.getNombre().equals(cardToCompareWith.getNombre()))
+            return true;
+        
+        //Si es un comodín
+        else if (cardToPlay.getColor().equals(Color.NEGRO))
+            return true;
+        
+        return false;
+    }
+
+    // ----------------------------Pendiente-----------------------------------
+    @Override
+    public boolean placeCardOnDiscardPile(Carta playedCard) throws Exception {
+        return true;
+    }
+
 
     
 

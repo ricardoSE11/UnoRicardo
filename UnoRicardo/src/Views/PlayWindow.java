@@ -96,6 +96,12 @@ public class PlayWindow extends javax.swing.JFrame {
         }
     }
     
+    public String getCardString(Carta c)
+    {
+        String nombreImagen = c.getNombre().toString() + c.getColor().toString();
+        return (nombreImagen.toLowerCase());
+    }
+    
    
     
     /**
@@ -170,7 +176,6 @@ public class PlayWindow extends javax.swing.JFrame {
         });
 
         lblDiscardPile.setBackground(new java.awt.Color(153, 51, 255));
-        lblDiscardPile.setText("DEBE IR ÚLTIMA CARTA QUE SE JUGÓ");
 
         javax.swing.GroupLayout drawAndDiscardPanelLayout = new javax.swing.GroupLayout(drawAndDiscardPanel);
         drawAndDiscardPanel.setLayout(drawAndDiscardPanelLayout);
@@ -328,6 +333,20 @@ public class PlayWindow extends javax.swing.JFrame {
     
     //Aquí se desactiva el botón de UNO. PROGRAMAR, POSTERIORMENTE, ADECUADAMENTE.
     private void btnStartGameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartGameActionPerformed
+
+        int lastCardIndex = 0;
+        try 
+        {
+            lastCardIndex = game.getDiscardPile().size() - 1;
+            Carta lastCard = game.getDiscardPile().get(lastCardIndex);
+            String imgString = getCardString(lastCard);
+            lblDiscardPile.setIcon(new javax.swing.ImageIcon(getClass().getResource("../Resources/" + imgString + ".png")));
+        } 
+        
+        catch (Exception ex) 
+        {
+            Logger.getLogger(PlayWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         placePlayerCards(jugador);
         btnCallUNO.setEnabled(false);

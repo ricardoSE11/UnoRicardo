@@ -45,5 +45,10 @@ public interface IGame extends Remote
     
     public ArrayList<Carta> drawACard(Jugador j , int amountOfCards)throws Exception;
     
+    public void initializeDiscardPile()throws Exception;
+    
+    public boolean isPlayValid(Carta cardToPlay)throws Exception;
+    
+    public boolean placeCardOnDiscardPile(Carta playedCard)throws Exception;
 
 }
