@@ -66,5 +66,9 @@ public interface IGame extends Remote
     public void removeCardFromPlayer(int playerID , int cardIndex) throws Exception;
     
     public int getNextTurn(int currentNumber) throws Exception;
+    
+    public boolean callUNO(int playerID)throws Exception;
+    
+    public boolean getEndGame()throws Exception;
 
 }

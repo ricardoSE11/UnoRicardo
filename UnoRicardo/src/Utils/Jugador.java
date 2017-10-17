@@ -75,4 +75,9 @@ public class Jugador implements  Serializable
         return this.hand.get(cardIndex);
     }
     
+    public String toString()
+    {
+        return "Nombre: " + name + "IP: " + ip;
+    }
+    
 }

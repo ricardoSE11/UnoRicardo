@@ -362,6 +362,17 @@ public class PlayWindow extends javax.swing.JFrame implements IObservador, Seria
 
     private void btnCallUNOActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCallUNOActionPerformed
 
+        int id = jugador.getId() - 1;
+        try 
+        {
+            game.callUNO(id);
+        }
+        
+        catch (Exception ex) 
+        {
+            Logger.getLogger(PlayWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         update();
     }//GEN-LAST:event_btnCallUNOActionPerformed
 
@@ -421,13 +432,22 @@ public class PlayWindow extends javax.swing.JFrame implements IObservador, Seria
 
         Registry miRegistro;
         try {
+            if (game.getEndGame())
+            {
+                this.dispose();
+            }
             player = game.getJugadores().get(id);
             int cantCartas = player.getHand().size();
+            if (cantCartas == 0)
+            {
+                JOptionPane.showMessageDialog(null, "GANADOR");
+                this.dispose();
+            }
             //updatePlayerCards(id);
             if (cantCartas == 1) {
                 btnCallUNO.setEnabled(true);
             } else {
-                btnCallUNO.setEnabled(true);
+                btnCallUNO.setEnabled(false);
             }
             
 

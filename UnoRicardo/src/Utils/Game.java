@@ -26,6 +26,8 @@ public class Game extends UnicastRemoteObject implements IGame, IObservable, Ser
     private int ultimoTurno;
     private int turn; //will be assigned with matching IDs
     private boolean adelante; //Quiere decir que los turnos van del menor al mayor
+    private int calledUNO; //Number will be equal to the player who called UNO first.
+    private boolean endGame;
 
     public Game() throws RemoteException {
         this.observadores = new ArrayList<>();
@@ -38,6 +40,7 @@ public class Game extends UnicastRemoteObject implements IGame, IObservable, Ser
         this.ultimoTurno = players.size();
         this.turn = 1; //Debe empezar en 1 porque el primer ID va a ser 1
         this.adelante = true;
+        this.endGame = false;
     }
 
     public void añadirObservador(IObservador o) {
@@ -209,9 +212,8 @@ public class Game extends UnicastRemoteObject implements IGame, IObservable, Ser
         } //Si es un comodín
         else if (cardToPlay.getColor().equals(Color.NEGRO)) {
             return true;
-        }
-        //Variación >.<
-        else if (cardToCompareWith.getColor().equals(Color.NEGRO)){
+        } //Variación >.<
+        else if (cardToCompareWith.getColor().equals(Color.NEGRO)) {
             return true;
         }
 
@@ -225,7 +227,7 @@ public class Game extends UnicastRemoteObject implements IGame, IObservable, Ser
             Tipo currentTipo = playedCard.getTipo();
             switch (currentTipo) {
                 case TRAMPA:
-                    if (playedCard.getNombre().equals(Nombre.SALTA)) {                       
+                    if (playedCard.getNombre().equals(Nombre.SALTA)) {
                         getNexTurn();
                         getNexTurn();
                         discardPile.add(playedCard);
@@ -233,10 +235,19 @@ public class Game extends UnicastRemoteObject implements IGame, IObservable, Ser
                     }
 
                     if (playedCard.getNombre().equals(Nombre.REVERSA)) {
-                        reversa();
-                        getNexTurn();
-                        discardPile.add(playedCard);
-                        return true;
+                        if (players.size() == 2) {
+                            reversa();
+                            discardPile.add(playedCard);
+                            return true;
+                        } 
+                        else {
+                            reversa();
+                            discardPile.add(playedCard);
+                            getNexTurn();
+                            return true;
+                        }
+                        
+
                     }
 
                     if (playedCard.getNombre().equals(Nombre.TOMADOS)) {
@@ -247,7 +258,7 @@ public class Game extends UnicastRemoteObject implements IGame, IObservable, Ser
                         return true;
                     }
 
-                    if (playedCard.getNombre().equals(Nombre.COMODIN4)) {  
+                    if (playedCard.getNombre().equals(Nombre.COMODIN4)) {
                         //getNexTurn();
                         drawACard(getNextTurn(turn) - 1, 4);
                         discardPile.add(playedCard);
@@ -255,7 +266,7 @@ public class Game extends UnicastRemoteObject implements IGame, IObservable, Ser
                     }
 
                     if (playedCard.getNombre().equals(Nombre.COMODIN)) {
-                        discardPile.add(playedCard); 
+                        discardPile.add(playedCard);
                         return true;
                     }
 
@@ -288,7 +299,7 @@ public class Game extends UnicastRemoteObject implements IGame, IObservable, Ser
     @Override
     public void endGame() throws Exception {
         notificar();
-        this.gameOn = false;
+        this.endGame = true;
     }
 
     //Método de prueba
@@ -340,30 +351,46 @@ public class Game extends UnicastRemoteObject implements IGame, IObservable, Ser
 
     @Override
     public int getNextTurn(int currentNumber) throws Exception {
-        if (adelante == true) 
-        {
-            if (currentNumber + 1 > ultimoTurno) 
-            {
+        if (adelante == true) {
+            if (currentNumber + 1 > ultimoTurno) {
                 currentNumber = primerTurno;
                 return currentNumber;
-            }
-            
-            else {
+            } else {
                 currentNumber += 1;
                 return currentNumber;
             }
 
-        } 
-        else 
-        {
-            if (currentNumber - 1 == 0) 
-            {
+        } else {
+            if (currentNumber - 1 == 0) {
                 return ultimoTurno;
             } else {
                 currentNumber -= 1;
                 return currentNumber;
             }
         }
+    }
+
+    //Retorna true si el jugador que lo llamó, tiene una Carta
+    @Override
+    public boolean callUNO(int playerID) throws Exception {
+        Jugador superFastPlayer = players.get(playerID);
+        System.out.println("El jugador " + superFastPlayer.getName() + " ha dicho UNO.");
+        calledUNO = playerID;
+        
+        if (superFastPlayer.getHand().size() == 1)
+        {
+            return true;
+        }
+        
+        else
+        {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean getEndGame() throws Exception {
+        return this.endGame;
     }
 
 }

@@ -35,8 +35,7 @@ public class MainServidor implements java.io.Serializable
                 System.out.println("1. Información de Jugadores");
                 System.out.println("2. Empezar juego");
                 System.out.println("3. Terminar juego");
-                System.out.println("5. Obtener la última carta jugada");
-                System.out.println("6. El tamaño de la mano del primer jugador");
+                System.out.println("4. Salir del menú");
                 Scanner opcion = new Scanner(System.in);
                 opt = opcion.nextInt();
                 System.out.println("La opción fue: " + opt);
@@ -77,19 +76,7 @@ public class MainServidor implements java.io.Serializable
                     juego.endGame();
                 }
                 
-                else if (opt == 5)
-                {
-                    int lastCardIndex = juego.getDiscardPile().size() - 1 ;
-                    Carta ultimaCartaJugada = juego.getDiscardPile().get(lastCardIndex);
-                    System.out.println("Carta: " + ultimaCartaJugada.getNombre() + " de color " + ultimaCartaJugada.getColor());       
-                }
-                
-                else if (opt == 6)
-                {
-                    Jugador jugadorUno = juego.getJugadores().get(0);
-                    int largoDeMano = jugadorUno.getHand().size();
-                    System.out.println("El tamaño de la mano en el Server es de: " + largoDeMano);
-                }
+
             } while (opt != 4);
 
         }
