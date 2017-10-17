@@ -43,7 +43,7 @@ public interface IGame extends Remote
     
     public boolean isGameOn()throws Exception;
     
-    public ArrayList<Carta> drawACard(Jugador j , int amountOfCards)throws Exception;
+    public ArrayList<Carta> drawACard(int playerID , int amountOfCards)throws Exception;
     
     public void initializeDiscardPile()throws Exception;
     
@@ -59,6 +59,10 @@ public interface IGame extends Remote
     
     public void getNexTurn()throws Exception;
     
-    void reversa()throws Exception;
+    public void setJugadores(ArrayList<Jugador> jugadores) throws Exception;
+    
+    public void reversa()throws Exception;
+    
+    public void removeCardFromPlayer(int playerID , int cardIndex) throws Exception;
 
 }

@@ -8,8 +8,7 @@ package Servidor;
 import Comun.IGame;
 import Utils.Carta;
 import Utils.Game;
-import Utils.Jugador;
-
+import Utils.Jugador;import java.net.InetAddress;
 import java.net.InetAddress;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -27,41 +26,50 @@ public class MainServidor implements java.io.Serializable
             Registry myRegistry = LocateRegistry.createRegistry(9500);
             myRegistry.rebind("Juegito", juego);
             
-
             System.out.println("Servidor ON en: "+ InetAddress.getLocalHost().getHostAddress());
             
             int opt;
             do
             {
                 System.out.println("Digite una opción: ");
+                System.out.println("1. Información de Jugadores");
+                System.out.println("2. Empezar juego");
+                System.out.println("3. Terminar juego");
+                System.out.println("5. Obtener la última carta jugada");
+                System.out.println("6. El tamaño de la mano del primer jugador");
                 Scanner opcion = new Scanner(System.in);
                 opt = opcion.nextInt();
                 System.out.println("La opción fue: " + opt);
                 if (opt == 1)
                 {
-                    juego.setTurn(8);
-                   /*for(Jugador currPlayer: juego.getJugadores())
+                    //juego.setTurn(8);
+                   for(Jugador currPlayer: juego.getJugadores())
                    {
                        System.out.println(currPlayer.toString());
-                   }*/
+                   }
                 } 
                 
                 else if (opt == 2) 
                 {
                     if (juego.isGameOn())
                     {
-                        System.out.println("");
-                        System.out.println("El juego ya empezó");
+                        System.out.println("+----------------------------------------------------------+");
+                        System.out.println("|           El juego ya empezó                             |"); 
+                        System.out.println("+----------------------------------------------------------+");
                     }
                     
-                    if (juego.getJugadores().size() >= 2)
+                    else if (juego.getJugadores().size() >= 2)
                     {
-                        System.out.println("Juego iniciado");
+                        System.out.println("+----------------------------------------------------------+");
+                        System.out.println("|            Juego iniciado                                |");
+                        System.out.println("+----------------------------------------------------------+");
                         juego.startGame();
                     }
 
-                    else
-                        System.out.println("No hay suficientes jugadores");
+                    else  //(juego.getJugadores().size() < 2)
+                        System.out.println("+----------------------------------------------------------+");
+                        System.out.println("|        No hay suficientes jugadores                      |");
+                        System.out.println("+----------------------------------------------------------+");
                 }
                 
                 else if (opt == 3)
@@ -73,8 +81,14 @@ public class MainServidor implements java.io.Serializable
                 {
                     int lastCardIndex = juego.getDiscardPile().size() - 1 ;
                     Carta ultimaCartaJugada = juego.getDiscardPile().get(lastCardIndex);
-                    System.out.println("Carta: " + ultimaCartaJugada.getNombre() + "de color " + ultimaCartaJugada.getColor());
-                    
+                    System.out.println("Carta: " + ultimaCartaJugada.getNombre() + " de color " + ultimaCartaJugada.getColor());       
+                }
+                
+                else if (opt == 6)
+                {
+                    Jugador jugadorUno = juego.getJugadores().get(0);
+                    int largoDeMano = jugadorUno.getHand().size();
+                    System.out.println("El tamaño de la mano en el Server es de: " + largoDeMano);
                 }
             } while (opt != 4);
 

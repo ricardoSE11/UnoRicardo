@@ -17,14 +17,13 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 
-public class MainWindow extends javax.swing.JFrame implements IObservador {
+public class MainWindow extends javax.swing.JFrame implements IObservador , Serializable {
     IGame game;
     String ip;
 
     public MainWindow(IGame g , String ip) throws Exception {
         this.ip = ip;
         this.game = g;
-       
         
         initComponents();
     }
@@ -176,7 +175,6 @@ public class MainWindow extends javax.swing.JFrame implements IObservador {
 
         try 
         {
-            int cantPlayers = game.getJugadores().size();
             game.añadirJugador(nuevoJugador);//potencial breakpoint
             
             int posicionActual = game.getJugadores().size() - 1;

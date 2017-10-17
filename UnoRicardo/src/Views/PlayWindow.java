@@ -24,9 +24,11 @@ import Utils.Jugador;
 import Comun.IGame;
 import Utils.Carta;
 import Utils.IObservador;
+import java.io.Serializable;
+import java.rmi.server.UnicastRemoteObject;
 
 
-public class PlayWindow extends javax.swing.JFrame implements IObservador {
+public class PlayWindow extends javax.swing.JFrame implements IObservador, Serializable {
     IGame game;
     Jugador jugador;
     private List<JButton> botonesDeCartas ; //lista de Botones
@@ -60,6 +62,7 @@ public class PlayWindow extends javax.swing.JFrame implements IObservador {
         
         botonDeCarta.addActionListener(new ActionListener() 
         {
+            
             @Override
             public void actionPerformed(ActionEvent e) 
             {
@@ -73,25 +76,32 @@ public class PlayWindow extends javax.swing.JFrame implements IObservador {
                     //Aquí debe ir el método de jugar del jugador respectivo.
 
                     boolean wasPlayed;
-                    
+                    update();
                     try 
                     {
                         int id = jugador.getId() - 1;
                         Jugador player = game.getJugadores().get(id);
                         
-                        System.out.println("El jugador: " + jugador.getName() + " jugó la carta de índice: " + cartaEscogida);
                         Carta playedCard = player.playCarta(cartaEscogida);
+                        System.out.println("CARTA SELECCIONADA: " + playedCard.getNombre() + " COLOR: " + playedCard.getColor());
+                        System.out.println("En botones de carta es: " + cartaEscogida);
+                        System.out.println("En cardsDisplayPanel es: " + cardsDisplayPanel.getComponent(cartaEscogida).getX());
                         
                         wasPlayed = game.placeCardOnDiscardPile(playedCard);//Si fue posicionada en DiscardPile
                         if (wasPlayed)
                         {
+                            
                             cardsDisplayPanel.remove(cartaEscogida);
-                            player.getHand().remove(cartaEscogida);
+                            botonesDeCartas.remove(cartaEscogida);
+                            game.removeCardFromPlayer(id, cartaEscogida);
+                            
                             game.getNexTurn();
                         }
                         
                         else
                         {
+                            update();
+                            System.out.println("El jugador: " + jugador.getName() + " intentó  la carta: " + playedCard.getNombre() + " " + playedCard.getColor());
                             JOptionPane.showMessageDialog(null, "Jugada inválida.");
                         }
                     } 
@@ -151,6 +161,8 @@ public class PlayWindow extends javax.swing.JFrame implements IObservador {
         jPanel2 = new javax.swing.JPanel();
         btnStartGame = new javax.swing.JButton();
         btnSetDiscardPile = new javax.swing.JButton();
+        btnCantCartas = new javax.swing.JButton();
+        txfCantCartas = new javax.swing.JTextField();
         drawAndDiscardPanel = new javax.swing.JPanel();
         btnDrawPile = new javax.swing.JButton();
         lblDiscardPile = new javax.swing.JLabel();
@@ -191,25 +203,42 @@ public class PlayWindow extends javax.swing.JFrame implements IObservador {
             }
         });
 
+        btnCantCartas.setText("Cantidad de Cartas");
+        btnCantCartas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCantCartasActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(93, 93, 93)
+                .addGap(21, 21, 21)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnStartGame, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSetDiscardPile, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(35, 35, 35)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnSetDiscardPile, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnStartGame, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnCantCartas)
+                    .addComponent(txfCantCartas, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btnStartGame, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnSetDiscardPile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(24, 24, 24))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addComponent(txfCantCartas))
+                    .addComponent(btnStartGame, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnSetDiscardPile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnCantCartas))
+                .addGap(12, 12, 12))
         );
 
         btnDrawPile.setIcon(new javax.swing.ImageIcon("f:\\Users\\rshum\\Downloads\\Images\\dorso.png")); // NOI18N
@@ -381,6 +410,7 @@ public class PlayWindow extends javax.swing.JFrame implements IObservador {
     //Aquí se desactiva el botón de UNO. PROGRAMAR, POSTERIORMENTE, ADECUADAMENTE.
     private void btnStartGameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartGameActionPerformed
 
+        btnStartGame.setEnabled(false);
         update();
         int id = jugador.getId() - 1;
         try 
@@ -393,8 +423,7 @@ public class PlayWindow extends javax.swing.JFrame implements IObservador {
         {
             Logger.getLogger(PlayWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        btnCallUNO.setEnabled(false);
+
     }//GEN-LAST:event_btnStartGameActionPerformed
 
     private void cardsDisplayPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cardsDisplayPanelMouseClicked
@@ -403,14 +432,17 @@ public class PlayWindow extends javax.swing.JFrame implements IObservador {
 
     private void btnDrawPileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDrawPileActionPerformed
 
-        int id = jugador.getId() - 1;
-        
+        update();
+        int id = jugador.getId() - 1; //Este jugador no es el que está jugando
+
         try 
         {
-            ArrayList<Carta> drawedCards = game.drawACard(jugador, 1);
+            Jugador player = game.getJugadores().get(id);
+            ArrayList<Carta> drawedCards = game.drawACard(id, 1);
             int largo = drawedCards.size();
             for (int i = 0 ; i < largo ; i++)
             {
+                
                 placeOneCard(drawedCards.get(i));
             }
         } 
@@ -419,6 +451,7 @@ public class PlayWindow extends javax.swing.JFrame implements IObservador {
         {
             Logger.getLogger(PlayWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
+        update();
     }//GEN-LAST:event_btnDrawPileActionPerformed
 
     private void serverListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_serverListActionPerformed
@@ -444,6 +477,7 @@ public class PlayWindow extends javax.swing.JFrame implements IObservador {
 
     private void btnSeePlayerIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeePlayerIDActionPerformed
 
+        update();
         int id = jugador.getId() - 1;
         int realID = id + 1;
         try 
@@ -503,10 +537,31 @@ public class PlayWindow extends javax.swing.JFrame implements IObservador {
         update();
     }//GEN-LAST:event_btnGameTurnActionPerformed
 
+    private void btnCantCartasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCantCartasActionPerformed
+
+        update();
+        int id = jugador.getId() - 1;
+        Jugador player;
+        try 
+        {
+            player = game.getJugadores().get(id);
+            int cantCartas = player.getHand().size();
+            txfCantCartas.setText(Integer.toString(cantCartas));        
+            update();
+        }
+        catch (Exception ex) 
+        {
+            Logger.getLogger(PlayWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        
+    }//GEN-LAST:event_btnCantCartasActionPerformed
+
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCallUNO;
+    private javax.swing.JButton btnCantCartas;
     private javax.swing.JButton btnCantidadJugadores;
     private javax.swing.JButton btnDrawPile;
     private javax.swing.JButton btnGameTurn;
@@ -522,17 +577,32 @@ public class PlayWindow extends javax.swing.JFrame implements IObservador {
     private javax.swing.JPanel panelFondo;
     private java.awt.List serverList;
     private javax.swing.JPanel serverPanel;
+    private javax.swing.JTextField txfCantCartas;
     private javax.swing.JTextField txfGameTurn;
     // End of variables declaration//GEN-END:variables
 
     @Override
     public void update() 
     {
+        int id = jugador.getId() - 1;
+        Jugador player;
 
         Registry miRegistro;
         
         try 
         {
+            player = game.getJugadores().get(id);
+            int cantCartas = player.getHand().size();
+            if (cantCartas == 1)
+            {
+                btnCallUNO.setEnabled(true);
+            }
+            
+            else
+            {
+                btnCallUNO.setEnabled(true);
+            }
+            
             if (game.getTurn() != jugador.getId()) 
             {
                 for (JButton boton : botonesDeCartas) 
@@ -551,6 +621,8 @@ public class PlayWindow extends javax.swing.JFrame implements IObservador {
             
             miRegistro = LocateRegistry.getRegistry(ip , 9500);
             IGame juego = (IGame)miRegistro.lookup("Juegito");
+
+            
         } 
         catch (Exception ex) 
         {
