@@ -27,125 +27,99 @@ import Utils.IObservador;
 import java.io.Serializable;
 import java.rmi.server.UnicastRemoteObject;
 
-
 public class PlayWindow extends javax.swing.JFrame implements IObservador, Serializable {
+
     IGame game;
     Jugador jugador;
-    private List<JButton> botonesDeCartas ; //lista de Botones
+    private List<JButton> botonesDeCartas; //lista de Botones
     private int indice;
     private int cartaEscogida;
     String ip;
 
-
     // -------------------Constructor---------------------------
-    public PlayWindow(IGame g , Jugador j, String ip) throws Exception
-    {
+    public PlayWindow(IGame g, Jugador j, String ip) throws Exception {
         initComponents();//SUMAMENTE IMPORTANTE
         this.botonesDeCartas = new ArrayList<>();
         this.jugador = j;
         this.game = g;
         this.ip = ip;
-        
 
     }
 
-
     // --------------------------- Methods ---------------------------
-    public void placeGraphicCard(String nameOfImage)
-    {
+    public void placeGraphicCard(String nameOfImage) {
         update();
         JButton botonDeCarta = new JButton();
-        botonDeCarta.setIcon(new javax.swing.ImageIcon(getClass().getResource("../Resources/"+nameOfImage+".png")));
+        botonDeCarta.setIcon(new javax.swing.ImageIcon(getClass().getResource("../Resources/" + nameOfImage + ".png")));
         this.cardsDisplayPanel.add(botonDeCarta);
         this.botonesDeCartas.add(botonDeCarta);
-        
-        
-        botonDeCarta.addActionListener(new ActionListener() 
-        {
-            
+
+        botonDeCarta.addActionListener(new ActionListener() {
+
             @Override
-            public void actionPerformed(ActionEvent e) 
-            {
+            public void actionPerformed(ActionEvent e) {
                 cartaEscogida = botonesDeCartas.indexOf(botonDeCarta);
                 //Si = 0, No = otra cosa >.<
-                int yesOrNo = JOptionPane.showConfirmDialog(null, "¿Desea jugar esta carta?" ,
-                        "Confirmación de jugada", JOptionPane.YES_NO_OPTION );
+                int yesOrNo = JOptionPane.showConfirmDialog(null, "¿Desea jugar esta carta?",
+                        "Confirmación de jugada", JOptionPane.YES_NO_OPTION);
 
-                if (yesOrNo == 0)
-                {
+                if (yesOrNo == 0) {
                     //Aquí debe ir el método de jugar del jugador respectivo.
 
                     boolean wasPlayed;
                     update();
-                    try 
-                    {
+                    try {
                         int id = jugador.getId() - 1;
                         Jugador player = game.getJugadores().get(id);
-                        
+
                         Carta playedCard = player.playCarta(cartaEscogida);
                         System.out.println("CARTA SELECCIONADA: " + playedCard.getNombre() + " COLOR: " + playedCard.getColor());
                         System.out.println("En botones de carta es: " + cartaEscogida);
                         System.out.println("En cardsDisplayPanel es: " + cardsDisplayPanel.getComponent(cartaEscogida).getX());
-                        
+
                         wasPlayed = game.placeCardOnDiscardPile(playedCard);//Si fue posicionada en DiscardPile
-                        if (wasPlayed)
-                        {
+                        if (wasPlayed) {
                             
-                            cardsDisplayPanel.remove(cartaEscogida);
-                            botonesDeCartas.remove(cartaEscogida);
+                            cardsDisplayPanel.remove(botonesDeCartas.remove(cartaEscogida));
                             game.removeCardFromPlayer(id, cartaEscogida);
-                            
-                            game.getNexTurn();
-                        }
-                        
-                        else
-                        {
+
+                        } else {
                             update();
                             System.out.println("El jugador: " + jugador.getName() + " intentó  la carta: " + playedCard.getNombre() + " " + playedCard.getColor());
                             JOptionPane.showMessageDialog(null, "Jugada inválida.");
                         }
-                    } 
-                    
-                    catch (Exception ex) 
-                    {
+                    } catch (Exception ex) {
                         Logger.getLogger(PlayWindow.class.getName()).log(Level.SEVERE, null, ex);
                     }
 
-                    
                 }
                 update();
             }
         });
-        
-        indice++ ;
+
+        indice++;
         this.cardsDisplayPanel.updateUI();
     }
-        
-    public void placeOneCard(Carta c)
-    {
+
+    public void placeOneCard(Carta c) {
         String nombreImagen = c.getNombre().toString() + c.getColor().toString();
-   
+
         placeGraphicCard(nombreImagen.toLowerCase());
     }
-    
-    public void placePlayerCards(Jugador j)
-    {
+
+    public void placePlayerCards(Jugador j) {
         int largo = j.getHand().size();
-        for (int i = 0; i < largo ; i++)
-        {
+        for (int i = 0; i < largo; i++) {
             Carta currentCard = j.getHand().get(i);
             placeOneCard(currentCard);
         }
     }
-    
-    public String getCardString(Carta c)
-    {
+
+    public String getCardString(Carta c) {
         String nombreImagen = c.getNombre().toString() + c.getColor().toString();
         return (nombreImagen.toLowerCase());
     }
-    
-   
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -406,21 +380,16 @@ public class PlayWindow extends javax.swing.JFrame implements IObservador, Seria
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    
     //Aquí se desactiva el botón de UNO. PROGRAMAR, POSTERIORMENTE, ADECUADAMENTE.
     private void btnStartGameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartGameActionPerformed
 
         btnStartGame.setEnabled(false);
         update();
         int id = jugador.getId() - 1;
-        try 
-        {
+        try {
             Jugador player = game.getJugadores().get(id);
             placePlayerCards(player);
-        } 
-        
-        catch (Exception ex) 
-        {
+        } catch (Exception ex) {
             Logger.getLogger(PlayWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -435,20 +404,15 @@ public class PlayWindow extends javax.swing.JFrame implements IObservador, Seria
         update();
         int id = jugador.getId() - 1; //Este jugador no es el que está jugando
 
-        try 
-        {
+        try {
             Jugador player = game.getJugadores().get(id);
             ArrayList<Carta> drawedCards = game.drawACard(id, 1);
             int largo = drawedCards.size();
-            for (int i = 0 ; i < largo ; i++)
-            {
-                
+            for (int i = 0; i < largo; i++) {
+
                 placeOneCard(drawedCards.get(i));
             }
-        } 
-        
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             Logger.getLogger(PlayWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
         update();
@@ -462,14 +426,11 @@ public class PlayWindow extends javax.swing.JFrame implements IObservador, Seria
 
         update();
         int numDePrueba;
-        try 
-        {
+        try {
             numDePrueba = game.getJugadores().size();
             String stringDePrueba = Integer.toString(numDePrueba);
             serverList.add(stringDePrueba);
-        } 
-        catch (Exception ex) 
-        {
+        } catch (Exception ex) {
             Logger.getLogger(PlayWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
         update();
@@ -480,16 +441,12 @@ public class PlayWindow extends javax.swing.JFrame implements IObservador, Seria
         update();
         int id = jugador.getId() - 1;
         int realID = id + 1;
-        try 
-        {
+        try {
             Jugador player = game.getJugadores().get(id);
             //int amountOfCards = player.getHand().size();
             serverList.add(Integer.toString(realID));
             //serverList.removeAll();
-        } 
-        
-        catch (Exception ex) 
-        {
+        } catch (Exception ex) {
             Logger.getLogger(PlayWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnSeePlayerIDActionPerformed
@@ -504,16 +461,12 @@ public class PlayWindow extends javax.swing.JFrame implements IObservador, Seria
         update();
         //Hace visible la última carta que esta en la DiscardPile
         int lastCardIndex = 0;
-        try 
-        {   
+        try {
             lastCardIndex = game.getDiscardPile().size() - 1;
             Carta lastCard = game.getDiscardPile().get(lastCardIndex);
             String imgString = getCardString(lastCard);
             lblDiscardPile.setIcon(new javax.swing.ImageIcon(getClass().getResource("../Resources/" + imgString + ".png")));
-        } 
-        
-        catch (Exception ex) 
-        {
+        } catch (Exception ex) {
             Logger.getLogger(PlayWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnSetDiscardPileActionPerformed
@@ -522,16 +475,12 @@ public class PlayWindow extends javax.swing.JFrame implements IObservador, Seria
 
         update();
         int turnoActual = 0;
-        try 
-        {
+        try {
             turnoActual = game.getTurn();
-        } 
-        
-        catch (Exception ex) 
-        {
+        } catch (Exception ex) {
             Logger.getLogger(PlayWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         String turno = Integer.toString(turnoActual);
         txfGameTurn.setText(turno);
         update();
@@ -542,21 +491,17 @@ public class PlayWindow extends javax.swing.JFrame implements IObservador, Seria
         update();
         int id = jugador.getId() - 1;
         Jugador player;
-        try 
-        {
+        try {
             player = game.getJugadores().get(id);
             int cantCartas = player.getHand().size();
-            txfCantCartas.setText(Integer.toString(cantCartas));        
+            txfCantCartas.setText(Integer.toString(cantCartas));
             update();
-        }
-        catch (Exception ex) 
-        {
+        } catch (Exception ex) {
             Logger.getLogger(PlayWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        
-    }//GEN-LAST:event_btnCantCartasActionPerformed
 
+    }//GEN-LAST:event_btnCantCartasActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -582,54 +527,38 @@ public class PlayWindow extends javax.swing.JFrame implements IObservador, Seria
     // End of variables declaration//GEN-END:variables
 
     @Override
-    public void update() 
-    {
+    public void update() {
         int id = jugador.getId() - 1;
         Jugador player;
 
         Registry miRegistro;
-        
-        try 
-        {
+
+        try {
             player = game.getJugadores().get(id);
             int cantCartas = player.getHand().size();
-            if (cantCartas == 1)
-            {
+            if (cantCartas == 1) {
+                btnCallUNO.setEnabled(true);
+            } else {
                 btnCallUNO.setEnabled(true);
             }
-            
-            else
-            {
-                btnCallUNO.setEnabled(true);
-            }
-            
-            if (game.getTurn() != jugador.getId()) 
-            {
-                for (JButton boton : botonesDeCartas) 
-                {
+
+            if (game.getTurn() != jugador.getId()) {
+                for (JButton boton : botonesDeCartas) {
                     boton.setEnabled(false);
                 }
-            }
-            
-            else
-            {
-                for (JButton boton : botonesDeCartas) 
-                {
+            } else {
+                for (JButton boton : botonesDeCartas) {
                     boton.setEnabled(true);
                 }
             }
-            
-            miRegistro = LocateRegistry.getRegistry(ip , 9500);
-            IGame juego = (IGame)miRegistro.lookup("Juegito");
 
-            
-        } 
-        catch (Exception ex) 
-        {
+            miRegistro = LocateRegistry.getRegistry(ip, 9500);
+            IGame juego = (IGame) miRegistro.lookup("Juegito");
+
+        } catch (Exception ex) {
             Logger.getLogger(PlayWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-    }
 
+    }
 
 }

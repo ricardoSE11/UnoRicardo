@@ -210,43 +210,63 @@ public class Game extends UnicastRemoteObject implements IGame, IObservable, Ser
         else if (cardToPlay.getColor().equals(Color.NEGRO)) {
             return true;
         }
+        //Variación >.<
+        else if (cardToCompareWith.getColor().equals(Color.NEGRO)){
+            return true;
+        }
 
         return false;
     }
 
-    // ----------------------------Pendiente-----------------------------------
     @Override
     public boolean placeCardOnDiscardPile(Carta playedCard) throws Exception {
         notificar();
         if (isPlayValid(playedCard)) {
-            Tipo currentTipo = null;
+            Tipo currentTipo = playedCard.getTipo();
             switch (currentTipo) {
                 case TRAMPA:
-                    if (playedCard.getNombre().equals(Nombre.SALTA)) {
+                    if (playedCard.getNombre().equals(Nombre.SALTA)) {                       
+                        getNexTurn();
+                        getNexTurn();
+                        discardPile.add(playedCard);
+                        return true;
                     }
 
                     if (playedCard.getNombre().equals(Nombre.REVERSA)) {
+                        reversa();
+                        getNexTurn();
+                        discardPile.add(playedCard);
+                        return true;
                     }
 
                     if (playedCard.getNombre().equals(Nombre.TOMADOS)) {
+                        drawACard(getNextTurn(turn) - 1, 2);
+                        getNexTurn();
+                        getNexTurn();
+                        discardPile.add(playedCard);
+                        return true;
                     }
 
-                    if (playedCard.getNombre().equals(Nombre.COMODIN4)) {
+                    if (playedCard.getNombre().equals(Nombre.COMODIN4)) {  
+                        //getNexTurn();
+                        drawACard(getNextTurn(turn) - 1, 4);
+                        discardPile.add(playedCard);
+                        return true;
                     }
 
                     if (playedCard.getNombre().equals(Nombre.COMODIN)) {
+                        discardPile.add(playedCard); 
+                        return true;
                     }
 
                 case NUMERAL:
                     discardPile.add(playedCard);
+                    getNexTurn();
                     return true;
             }
             System.out.println("Se jugó la carta: " + playedCard.getNombre().toString() + " " + playedCard.getColor().toString());
-            
-        }
-        
-        else 
-        {
+
+        } else {
             System.out.println("No se puede jugar la carta: " + playedCard.getNombre().toString() + " " + playedCard.getColor().toString());
             return false;
         }
@@ -316,6 +336,34 @@ public class Game extends UnicastRemoteObject implements IGame, IObservable, Ser
         Jugador selectedPlayer = this.players.get(playerID);
         Carta cardToRemove = selectedPlayer.getHand().get(cardIndex);
         selectedPlayer.getHand().remove(cardIndex);
+    }
+
+    @Override
+    public int getNextTurn(int currentNumber) throws Exception {
+        if (adelante == true) 
+        {
+            if (currentNumber + 1 > ultimoTurno) 
+            {
+                currentNumber = primerTurno;
+                return currentNumber;
+            }
+            
+            else {
+                currentNumber += 1;
+                return currentNumber;
+            }
+
+        } 
+        else 
+        {
+            if (currentNumber - 1 == 0) 
+            {
+                return ultimoTurno;
+            } else {
+                currentNumber -= 1;
+                return currentNumber;
+            }
+        }
     }
 
 }
