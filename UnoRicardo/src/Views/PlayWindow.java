@@ -100,6 +100,15 @@ public class PlayWindow extends javax.swing.JFrame implements IObservador, Seria
         indice++;
         this.cardsDisplayPanel.updateUI();
     }
+    
+    public void updatePlayerCards(int playerID) throws Exception
+    {
+        update();
+        Jugador currentPlayer = game.getJugadores().get(playerID);
+        cardsDisplayPanel.removeAll();
+        placePlayerCards(currentPlayer);
+             
+    }
 
     public void placeOneCard(Carta c) {
         String nombreImagen = c.getNombre().toString() + c.getColor().toString();
@@ -140,12 +149,6 @@ public class PlayWindow extends javax.swing.JFrame implements IObservador, Seria
         drawAndDiscardPanel = new javax.swing.JPanel();
         btnDrawPile = new javax.swing.JButton();
         lblDiscardPile = new javax.swing.JLabel();
-        serverPanel = new javax.swing.JPanel();
-        txfGameTurn = new javax.swing.JTextField();
-        serverList = new java.awt.List();
-        btnCantidadJugadores = new javax.swing.JButton();
-        btnSeePlayerID = new javax.swing.JButton();
-        btnGameTurn = new javax.swing.JButton();
         callUNOPanel = new javax.swing.JPanel();
         btnCallUNO = new javax.swing.JButton();
 
@@ -245,69 +248,6 @@ public class PlayWindow extends javax.swing.JFrame implements IObservador, Seria
                 .addContainerGap(79, Short.MAX_VALUE))
         );
 
-        serverPanel.setBackground(new java.awt.Color(102, 102, 102));
-
-        serverList.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                serverListActionPerformed(evt);
-            }
-        });
-
-        btnCantidadJugadores.setText("Cantidad de Jugadores");
-        btnCantidadJugadores.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCantidadJugadoresActionPerformed(evt);
-            }
-        });
-
-        btnSeePlayerID.setText("Player ID");
-        btnSeePlayerID.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSeePlayerIDActionPerformed(evt);
-            }
-        });
-
-        btnGameTurn.setText("Turno");
-        btnGameTurn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnGameTurnActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout serverPanelLayout = new javax.swing.GroupLayout(serverPanel);
-        serverPanel.setLayout(serverPanelLayout);
-        serverPanelLayout.setHorizontalGroup(
-            serverPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(serverPanelLayout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addGroup(serverPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(serverList, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(serverPanelLayout.createSequentialGroup()
-                        .addGroup(serverPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnSeePlayerID, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnGameTurn, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(serverPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(btnCantidadJugadores, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txfGameTurn, javax.swing.GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE))))
-                .addContainerGap(25, Short.MAX_VALUE))
-        );
-        serverPanelLayout.setVerticalGroup(
-            serverPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, serverPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(serverList, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(serverPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txfGameTurn, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnGameTurn))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(serverPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnCantidadJugadores)
-                    .addComponent(btnSeePlayerID))
-                .addContainerGap(20, Short.MAX_VALUE))
-        );
-
         btnCallUNO.setIcon(new javax.swing.ImageIcon("f:\\Users\\rshum\\Desktop\\ImagenesUNO\\UNO.png")); // NOI18N
         btnCallUNO.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -319,14 +259,17 @@ public class PlayWindow extends javax.swing.JFrame implements IObservador, Seria
         callUNOPanel.setLayout(callUNOPanelLayout);
         callUNOPanelLayout.setHorizontalGroup(
             callUNOPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(callUNOPanelLayout.createSequentialGroup()
-                .addGap(56, 56, 56)
-                .addComponent(btnCallUNO, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, callUNOPanelLayout.createSequentialGroup()
+                .addContainerGap(45, Short.MAX_VALUE)
+                .addComponent(btnCallUNO, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(52, 52, 52))
         );
         callUNOPanelLayout.setVerticalGroup(
             callUNOPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(btnCallUNO, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addGroup(callUNOPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnCallUNO, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout panelFondoLayout = new javax.swing.GroupLayout(panelFondo);
@@ -338,11 +281,10 @@ public class PlayWindow extends javax.swing.JFrame implements IObservador, Seria
                 .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(drawAndDiscardPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cardsDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 539, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 88, Short.MAX_VALUE)
-                .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(serverPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(callUNOPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 130, Short.MAX_VALUE)
+                .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(callUNOPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(32, 32, 32))
         );
         panelFondoLayout.setVerticalGroup(
@@ -355,11 +297,11 @@ public class PlayWindow extends javax.swing.JFrame implements IObservador, Seria
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
                         .addComponent(cardsDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(panelFondoLayout.createSequentialGroup()
-                        .addComponent(serverPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addGap(353, 353, 353)
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(callUNOPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(callUNOPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(22, 22, 22))
         );
 
@@ -418,39 +360,6 @@ public class PlayWindow extends javax.swing.JFrame implements IObservador, Seria
         update();
     }//GEN-LAST:event_btnDrawPileActionPerformed
 
-    private void serverListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_serverListActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_serverListActionPerformed
-
-    private void btnCantidadJugadoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCantidadJugadoresActionPerformed
-
-        update();
-        int numDePrueba;
-        try {
-            numDePrueba = game.getJugadores().size();
-            String stringDePrueba = Integer.toString(numDePrueba);
-            serverList.add(stringDePrueba);
-        } catch (Exception ex) {
-            Logger.getLogger(PlayWindow.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        update();
-    }//GEN-LAST:event_btnCantidadJugadoresActionPerformed
-
-    private void btnSeePlayerIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeePlayerIDActionPerformed
-
-        update();
-        int id = jugador.getId() - 1;
-        int realID = id + 1;
-        try {
-            Jugador player = game.getJugadores().get(id);
-            //int amountOfCards = player.getHand().size();
-            serverList.add(Integer.toString(realID));
-            //serverList.removeAll();
-        } catch (Exception ex) {
-            Logger.getLogger(PlayWindow.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_btnSeePlayerIDActionPerformed
-
     private void btnCallUNOActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCallUNOActionPerformed
 
         update();
@@ -470,21 +379,6 @@ public class PlayWindow extends javax.swing.JFrame implements IObservador, Seria
             Logger.getLogger(PlayWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnSetDiscardPileActionPerformed
-
-    private void btnGameTurnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGameTurnActionPerformed
-
-        update();
-        int turnoActual = 0;
-        try {
-            turnoActual = game.getTurn();
-        } catch (Exception ex) {
-            Logger.getLogger(PlayWindow.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        String turno = Integer.toString(turnoActual);
-        txfGameTurn.setText(turno);
-        update();
-    }//GEN-LAST:event_btnGameTurnActionPerformed
 
     private void btnCantCartasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCantCartasActionPerformed
 
@@ -507,10 +401,7 @@ public class PlayWindow extends javax.swing.JFrame implements IObservador, Seria
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCallUNO;
     private javax.swing.JButton btnCantCartas;
-    private javax.swing.JButton btnCantidadJugadores;
     private javax.swing.JButton btnDrawPile;
-    private javax.swing.JButton btnGameTurn;
-    private javax.swing.JButton btnSeePlayerID;
     private javax.swing.JButton btnSetDiscardPile;
     private javax.swing.JButton btnStartGame;
     private javax.swing.JPanel callUNOPanel;
@@ -520,10 +411,7 @@ public class PlayWindow extends javax.swing.JFrame implements IObservador, Seria
     private javax.swing.JPanel jPanel2;
     private javax.swing.JLabel lblDiscardPile;
     private javax.swing.JPanel panelFondo;
-    private java.awt.List serverList;
-    private javax.swing.JPanel serverPanel;
     private javax.swing.JTextField txfCantCartas;
-    private javax.swing.JTextField txfGameTurn;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -532,15 +420,16 @@ public class PlayWindow extends javax.swing.JFrame implements IObservador, Seria
         Jugador player;
 
         Registry miRegistro;
-
         try {
             player = game.getJugadores().get(id);
             int cantCartas = player.getHand().size();
+            //updatePlayerCards(id);
             if (cantCartas == 1) {
                 btnCallUNO.setEnabled(true);
             } else {
                 btnCallUNO.setEnabled(true);
             }
+            
 
             if (game.getTurn() != jugador.getId()) {
                 for (JButton boton : botonesDeCartas) {
