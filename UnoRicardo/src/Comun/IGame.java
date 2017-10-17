@@ -8,14 +8,12 @@ package Comun;
 import Utils.Carta;
 import Utils.IObservador;
 import Utils.Jugador;
-import Utils.Pipo;
 import java.rmi.Remote;
 import java.util.ArrayList;
 
 
 public interface IGame extends Remote
 {
-    public String enviarPipo(Pipo pipo)throws Exception;
     
     public int sumarATurno()throws Exception;
     

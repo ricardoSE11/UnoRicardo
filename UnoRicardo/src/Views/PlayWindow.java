@@ -82,6 +82,7 @@ public class PlayWindow extends javax.swing.JFrame implements IObservador, Seria
                             
                             cardsDisplayPanel.remove(botonesDeCartas.remove(cartaEscogida));
                             game.removeCardFromPlayer(id, cartaEscogida);
+                            placePlayerCards(player);
 
                         } else {
                             update();
@@ -105,7 +106,6 @@ public class PlayWindow extends javax.swing.JFrame implements IObservador, Seria
     {
         update();
         Jugador currentPlayer = game.getJugadores().get(playerID);
-        cardsDisplayPanel.removeAll();
         placePlayerCards(currentPlayer);
              
     }
@@ -118,6 +118,7 @@ public class PlayWindow extends javax.swing.JFrame implements IObservador, Seria
 
     public void placePlayerCards(Jugador j) {
         int largo = j.getHand().size();
+        cardsDisplayPanel.removeAll();
         for (int i = 0; i < largo; i++) {
             Carta currentCard = j.getHand().get(i);
             placeOneCard(currentCard);
@@ -154,6 +155,7 @@ public class PlayWindow extends javax.swing.JFrame implements IObservador, Seria
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
+        setResizable(false);
 
         panelFondo.setBackground(new java.awt.Color(204, 0, 0));
         panelFondo.setForeground(new java.awt.Color(204, 0, 51));
@@ -443,7 +445,7 @@ public class PlayWindow extends javax.swing.JFrame implements IObservador, Seria
                 JOptionPane.showMessageDialog(null, "GANADOR");
                 this.dispose();
             }
-            //updatePlayerCards(id);
+            
             if (cantCartas == 1) {
                 btnCallUNO.setEnabled(true);
             } else {

@@ -48,12 +48,6 @@ public class Game extends UnicastRemoteObject implements IGame, IObservable, Ser
         observadores.add(o);
     }
 
-    @Override
-    public String enviarPipo(Pipo pipo) throws Exception {
-        //El print va para el Server, el return para el Cliente
-        System.out.println(pipo.piposo.atributillo);
-        return pipo.nombre;
-    }
 
     @Override
     public int sumarATurno() throws Exception {
